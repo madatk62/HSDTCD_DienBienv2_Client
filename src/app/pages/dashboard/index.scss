@@ -1,0 +1,9 @@
+.card-dashboard-body::-webkit-scrollbar {
+  display: none;
+}
+.row-tableapp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  -webkit-box-orient: vertical;
+}
