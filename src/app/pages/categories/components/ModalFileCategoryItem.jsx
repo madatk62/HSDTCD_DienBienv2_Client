@@ -3,7 +3,7 @@ import {Modal, Button} from 'react-bootstrap-v5'
 import {Formik, useFormik} from 'formik'
 import * as yup from 'yup'
 import clsx from 'clsx'
-import {Upload} from 'antd'
+import {Upload, Select} from 'antd'
 import {toast} from 'react-toastify'
 
 import {urlStringToFileList, getUrlDinhKem} from '../../common/Common'
@@ -11,9 +11,11 @@ import {CONFIG} from '../../../../helpers/config'
 import {
   request_UploadFile,
   requestPOST_URL,
+  requestPOST_DanhMuc,
   requestPOSTASP_URL,
 } from '../../../../../src/helpers/baseAPI'
 import {getBase64} from '../../../../../src/helpers/utils'
+const {Option} = Select
 const {Dragger} = Upload
 const maxUploadSize = 3000000
 var initValue = {
@@ -39,6 +41,50 @@ const GiayToSchema = yup.object().shape({
 const ModalFileCategoryItem = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [fileUpload, setFileUpload] = useState([])
+
+  // init formdata
+  const [dsNhomHGiayTo, setDsNhomHGiayTo] = useState([])
+  const [dsLoaiHGiayTo, setDsLoaiHGiayTo] = useState([])
+  // LoadFormData
+  const LoadFormDaTa = async () => {
+    // load ds nhom giay to
+    var urlDsNhomHGiayTo = `${CONFIG.BASE_HSDT_URL}/DanhSachNhomGiayTo`
+    var searchBodyNhomHGiayTo = {
+      draw: 1,
+      columns: [],
+      Active: true,
+      order: [],
+      start: 0,
+      length: 100,
+      search: {
+        value: '',
+        regex: false,
+      },
+    }
+    var dataNhomHGiayTo = await requestPOST_DanhMuc(urlDsNhomHGiayTo, searchBodyNhomHGiayTo)
+    if (dataNhomHGiayTo.data) {
+      setDsNhomHGiayTo(dataNhomHGiayTo.data.data)
+    }
+    // load ds loai giay to
+    var urlDsLoaiHGiayTo = `${CONFIG.BASE_HSDT_URL}/DanhSachLoaiGiayTo`
+    var searchBodyLoaiHGiayTo = {
+      draw: 1,
+      columns: [],
+      Active: true,
+      order: [],
+      start: 0,
+      length: 100,
+      search: {
+        value: '',
+        regex: false,
+      },
+    }
+    var dataLoaiHGiayTo = await requestPOST_DanhMuc(urlDsLoaiHGiayTo, searchBodyLoaiHGiayTo)
+    if (dataLoaiHGiayTo.data) {
+      setDsLoaiHGiayTo(dataLoaiHGiayTo.data.data)
+    }
+  }
+
   const handleSubmitForm = async () => {
     var url = await getUrlDinhKem(fileUpload)
     console.log(url)
@@ -174,6 +220,7 @@ const ModalFileCategoryItem = (props) => {
     fileList: fileUpload,
   }
   useEffect(() => {
+    LoadFormDaTa()
     formik.setValues(props.data)
     fillFormDinhKem()
   }, [])
@@ -258,6 +305,75 @@ const ModalFileCategoryItem = (props) => {
           </div>
           <div className='row fv-row mb-7'>
             <div className='col-xl-6 col-lg-6 col-md-6'>
+              <label className='form-label fw-bolder text-dark fs-6'>Loại giấy tờ</label>
+              <Select
+                // defaultValue='2.000379.000.00.00.H18'
+                defaultValue={props.data.LoaiGiayToCongDanID}
+                className='col-xl-12 col-lg-12 col-md-12'
+                allowClear
+                showSearch
+                // disabled={isDisableInput}
+                placeholder='Loại giấy tờ công dân'
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+                onChange={(val, option) => {
+                  formik.values.LoaiGiayToCongDanID = val
+                }}
+              >
+                {dsLoaiHGiayTo.map((item) => {
+                  // if (item.MATTHC == formik.values.maThuTuc && formik.values.maThuTuc) {
+                  //   return (
+                  //     <Option key={item.MATTHC} value={item.MATTHC} selected>
+                  //       {item.TENTTHC}
+                  //     </Option>
+                  //   )
+                  // }
+                  return (
+                    <Option key={item.Ma} value={item.Ma}>
+                      {item.Ten}
+                    </Option>
+                  )
+                })}
+              </Select>
+            </div>
+            <div className='col-xl-6 col-lg-6 col-md-6'>
+              <label className='form-label fw-bolder text-dark fs-6'>Nhóm giấy tờ</label>
+              <Select
+                // defaultValue='2.000379.000.00.00.H18'
+                defaultValue={props.data.NhomGiayToCongDanID}
+                className='col-xl-12 col-lg-12 col-md-12'
+                allowClear
+                showSearch
+                // disabled={isDisableInput}
+                placeholder='Nhóm giấy tờ công dân'
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+                onChange={(val, prop) => {
+                  formik.values.NhomGiayToCongDanID = val
+                  // formik.values.NhomGiayToCongDanID
+                }}
+              >
+                {dsNhomHGiayTo.map((item) => {
+                  // if (item.MATTHC == formik.values.maThuTuc && formik.values.maThuTuc) {
+                  //   return (
+                  //     <Option key={item.MATTHC} value={item.MATTHC} selected>
+                  //       {item.TENTTHC}
+                  //     </Option>
+                  //   )
+                  // }
+                  return (
+                    <Option key={item.Ma} value={item.Ma}>
+                      {item.Ten}
+                    </Option>
+                  )
+                })}
+              </Select>
+            </div>
+          </div>
+          <div className='row fv-row mb-7'>
+            <div className='col-xl-6 col-lg-6 col-md-6'>
               <label className='form-label fw-bolder text-dark fs-6 required'>Tên giấy tờ</label>
               <textarea
                 placeholder='Tên giấy tờ'
@@ -282,31 +398,32 @@ const ModalFileCategoryItem = (props) => {
                 </div>
               )}
             </div>
-          </div>
-          <div className='row fv-row mb-7'>
-            <div>
-              {' '}
-              <label className='form-label fw-bolder text-dark fs-6'>Đính kèm</label>
-            </div>
-            <div>
-              <Dragger {...uploads}>
-                <div>
-                  <p className='ant-upload-text'>Thả tệp tin hoặc nhấp chuột để tải lên</p>
-                  <p className='ant-upload-hint'>Đính kèm</p>
-                </div>
-              </Dragger>
-            </div>
-
-            {formik.touched.UrlFile && formik.errors.UrlFile && (
-              <div className='fv-plugins-message-container'>
-                <div className='fv-help-block'>
-                  <span role='alert' className='text-danger'>
-                    {formik.errors.UrlFile}
-                  </span>
-                </div>
+            <div className='col-xl-6 col-lg-6 col-md-6'>
+              <div>
+                {' '}
+                <label className='form-label fw-bolder text-dark fs-6'>Đính kèm</label>
               </div>
-            )}
+              <div>
+                <Dragger {...uploads}>
+                  <div>
+                    <p className='ant-upload-text'>Thả tệp tin hoặc nhấp chuột để tải lên</p>
+                    <p className='ant-upload-hint'>Đính kèm</p>
+                  </div>
+                </Dragger>
+              </div>
+
+              {formik.touched.UrlFile && formik.errors.UrlFile && (
+                <div className='fv-plugins-message-container'>
+                  <div className='fv-help-block'>
+                    <span role='alert' className='text-danger'>
+                      {formik.errors.UrlFile}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
+          {/* <div className='row fv-row mb-7'></div> */}
         </Modal.Body>
         <Modal.Footer className='bg-light px-4 py-2 align-items-center'>
           <div className='d-flex justify-content-center  align-items-center'>

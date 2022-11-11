@@ -15,13 +15,13 @@ export const AsideMenuMain = () => {
     <>
       <AsideMenuItemWithSub
         to='/manage/'
-        title='Hồ sơ cá nhân'
+        title='Giấy tờ cá nhân'
         // icon='/media/icons/duotune/communication/com006.svg'
         // fontIcon='bi-person'
       >
-        <AsideMenuItem to='/categories' title='Hồ sơ cá nhân' hasBullet={true} />
-        <AsideMenuItem to='/group-file' title='Nhóm hồ sơ' hasBullet={true} />
-        <AsideMenuItem to='/type-file' title='Loại hồ sơ' hasBullet={true} />
+        <AsideMenuItem to='/categories' title='Giấy tờ cá nhân' hasBullet={true} />
+        <AsideMenuItem to='/group-file' title='Nhóm giấy tờ' hasBullet={true} />
+        <AsideMenuItem to='/type-file' title='Loại giấy tờ' hasBullet={true} />
       </AsideMenuItemWithSub>
       <AsideMenuItem to='/ho-so-dien-tu' title='Hồ sơ điện tử' hasBullet={false} />
       <AsideMenuItem to='/giay-to-ho-so-dien-tu' title='Giấy tờ hồ sơ điện tử' hasBullet={false} />

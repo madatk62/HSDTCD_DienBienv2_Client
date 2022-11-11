@@ -87,6 +87,27 @@ export const requestPOST_URL = async (URL, data) => {
     return null
   }
 }
+export const requestPOST_DanhMuc= async (URL, data) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'tenant':'root',
+        // Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
+        //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+        // "Access-Control-Allow-Origin":"*",
+        // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+      },
+      url: URL,
+      data,
+    })
+
+    return res.data
+  } catch (error) {
+    return null
+  }
+}
 export const requestPOSTASP_URL = async (URL, data) => {
   try {
     return new Promise((resolve,reject)=>{

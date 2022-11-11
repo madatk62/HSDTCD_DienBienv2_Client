@@ -70,9 +70,7 @@ const TableFileCategories = (props:any) => {
     }
     const getDataCategories = ()=>{
         var url = `${CONFIG.BASE_HSDT_URL}/GetDanhSachGiayToTheoIDCongDan`;
-        console.log('====================================');
-        console.log(userInfor);
-        console.log('====================================');
+       
         var Data = {
             idCongDan: userInfor.technicalId?userInfor.technicalId:"f4f98407-6170-4fe4-8a3c-ceacb394ad90"
         }
