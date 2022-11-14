@@ -82,12 +82,8 @@ const TableGiayToHoSoDienTus = (props:any) => {
     }
     const getDataCategories = (data:any = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/search`;
-        console.log(data);
-        
         requestPOST_URL(url,data).then(res=>{
             if(res?.data){
-                console.log(res?.data);
-                
                 setDataTable(res?.data);
             }
         })

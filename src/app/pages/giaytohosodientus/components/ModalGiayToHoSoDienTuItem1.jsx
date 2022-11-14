@@ -14,6 +14,7 @@ import {
   requestPOST_URL,
   requestPOST_DanhMuc,
   requestPOSTASP_URL,
+  requestPUT_URL,
 } from '../../../../../src/helpers/baseAPI'
 import {getBase64} from '../../../../../src/helpers/utils'
 import {userInfo} from 'os'
@@ -24,19 +25,19 @@ const maxUploadSize = 3000000
 const ModalFileCategoryItem1 = (props) => {
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initSelectFormValue = {
-    nhomGiayTo: null,
-    loaiGiayTo: null,
-    HoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : null,
+    nhomGiayTo: props?.data?.nhomGiayToID ? parseInt(props?.data?.nhomGiayToID) : null,
+    loaiGiayTo: props?.data?.loaiGiayToID ? parseInt(props?.data?.loaiGiayToID) : null,
+    hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null,
   }
   var initValue = {
     MaGiayTo: '',
     TenGiayTo: '',
     UrlFile: '',
-    LoaiGiayToID: '',
+    LoaiGiayToID: props?.data?.loaiGiayToID ? props?.data?.loaiGiayToID : null,
     TenLoaiGiayTo: '',
-    NhomGiayToID: '',
+    NhomGiayToID: props?.data?.nhomGiayToID ? props?.data?.nhomGiayToID : null,
     TenNhomGiayTo: '',
-    HoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : '',
+    HoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : '',
     SoGiayTo: '',
   }
   const GiayToSchema = yup.object().shape({
@@ -138,18 +139,29 @@ const ModalFileCategoryItem1 = (props) => {
       setIsLoading(true)
       if (props.action == 'edit') {
         var putData = {
-          ID: props.data.ID,
-          MaGiayTo: formik.values.MaGiayTo,
-          TenGiayTo: formik.values.TenGiayTo,
-          UrlFile: formik.values.UrlFile,
+          id: props?.data?.id,
+          maHoSoDienTu: '',
+          hoSoDienTuID: formik.values.HoSoDienTuID,
+          maGiayTo: formik.values.MaGiayTo,
+          tenGiayTo: formik.values.TenGiayTo,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+          dinhKem: formik.values.UrlFile,
+          soGiayTo: formik.values.SoGiayTo,
+          loaiGiayToID: formik.values.LoaiGiayToID,
+          tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
+          tenNhomGiayTo: formik.values.TenNhomGiayTo,
+          nhomGiayToID: formik.values.NhomGiayToID,
         }
-        var url = ` ${CONFIG.BASE_HSDT_URL}/SuaGiayTo`
-        requestPOST_URL(url, putData).then((res) => {
+        console.log(putData)
+        var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/${props?.data?.id}`
+        requestPUT_URL(url, putData).then((res) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          props.reRenderTable()
+          const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
+
+          props.reRenderTable(searchData)
         })
       } else if (props.action == 'add') {
         var postData = {
@@ -339,7 +351,7 @@ const ModalFileCategoryItem1 = (props) => {
                 }
                 onChange={(val, option) => {
                   formik.values.HoSoDienTuID = val
-                  setSelectedOption({...selectedOption, HoSoDienTuID: val})
+                  setSelectedOption({...selectedOption, hoSoDienTuID: val})
                 }}
               >
                 {dsHoSo.map((item) => {
@@ -373,7 +385,7 @@ const ModalFileCategoryItem1 = (props) => {
               <label className='form-label fw-bolder text-dark fs-6'>Loại giấy tờ</label>
               <Select
                 // defaultValue='2.000379.000.00.00.H18'
-                defaultValue={props.data.LoaiGiayToCongDanID}
+                value={selectedOption.loaiGiayTo}
                 className='col-xl-12 col-lg-12 col-md-12'
                 allowClear
                 showSearch
@@ -383,7 +395,9 @@ const ModalFileCategoryItem1 = (props) => {
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 onChange={(val, option) => {
-                  formik.values.LoaiGiayToCongDanID = val
+                  formik.values.LoaiGiayToID = val ? val.toString() : null
+                  formik.values.TenLoaiGiayTo = option?.children ? option?.children : null
+                  setSelectedOption({...selectedOption, loaiGiayTo: val})
                 }}
               >
                 {dsLoaiHGiayTo.map((item) => {
@@ -415,7 +429,7 @@ const ModalFileCategoryItem1 = (props) => {
               <label className='form-label fw-bolder text-dark fs-6'>Nhóm giấy tờ</label>
               <Select
                 // defaultValue='2.000379.000.00.00.H18'
-                defaultValue={props.data.NhomGiayToCongDanID}
+                value={selectedOption.nhomGiayTo}
                 className='col-xl-12 col-lg-12 col-md-12'
                 allowClear
                 showSearch
@@ -424,9 +438,11 @@ const ModalFileCategoryItem1 = (props) => {
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
-                onChange={(val, prop) => {
-                  formik.values.NhomGiayToCongDanID = val
+                onChange={(val, option) => {
+                  formik.values.NhomGiayToID = val ? val.toString() : null
+                  formik.values.TenNhomGiayTo = option?.children ? option?.children : null
                   // formik.values.NhomGiayToCongDanID
+                  setSelectedOption({...selectedOption, nhomGiayTo: val})
                 }}
               >
                 {dsNhomHGiayTo.map((item) => {
