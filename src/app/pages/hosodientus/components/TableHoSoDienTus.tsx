@@ -6,7 +6,7 @@ import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
 import { requestPOST_URL } from '../../../../helpers/baseAPI';
 import ModalHoSoDienTuItem from './ModalHoSoDienTuItem';
-import PageHearder from '../../components/PageHeader';
+import PageHearder from './PageHeader';
 
 const TableHoSoDienTus = (props:any) => {
     const [modalAction, setModalAction] = useState("");
@@ -68,8 +68,9 @@ const TableHoSoDienTus = (props:any) => {
     const handleItem = (record: any, action:string = "view")=>{
         if(record) {
             setDetailItem(record);
-            setModalAction(action);
+            
         }
+        setModalAction(action);
         setModalVisible(!modalVisible);
     }
     const getDataCategories = ()=>{
@@ -77,8 +78,8 @@ const TableHoSoDienTus = (props:any) => {
         var Data ={
          }
         requestPOST_URL(url,Data).then(res=>{
-            if(res.data){
-                setDataTable(res.data);
+            if(res?.data){
+                setDataTable(res?.data);
             }
         })
       

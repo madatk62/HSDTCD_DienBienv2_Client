@@ -13,12 +13,6 @@ const PageHearder = (props:any) =>{
                             <span className=''>Thêm mới</span>
                         </span>
                     </button>
-                    <button className='btn btn-info btn-sm m-btn m-btn--icon py-2 me-2' type='button' onClick={props.onClickThemMoi}>
-                        <span>
-                            <i className='fas fa-plus'></i>
-                            <span className=''>Thêm mới từ danh sách</span>
-                        </span>
-                    </button>
                 </div>
                 
             </div>    

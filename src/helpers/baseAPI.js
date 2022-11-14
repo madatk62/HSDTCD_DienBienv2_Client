@@ -72,7 +72,7 @@ export const requestPOST_URL = async (URL, data) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'tenant':'root',
+        // 'tenant':'root',
         Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
         //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
         // "Access-Control-Allow-Origin":"*",
@@ -110,19 +110,21 @@ export const requestPOST_DanhMuc= async (URL, data) => {
 }
 export const requestPOSTASP_URL = async (URL, data) => {
   try {
+   console.log(JSON.stringify(data)); 
     return new Promise((resolve,reject)=>{
       axios({
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json; charset=utf-8', 
+          'Accept': 'application/json', 
           // 'tenant':'root',
           Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
           //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
-          // "Access-Control-Allow-Origin":"*",
-          // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+          //  "Access-Control-Allow-Origin":"*",
+          //  'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
         },
         url: URL,
-        data,
+        data: JSON.stringify(data),
       }).then(res=> resolve(res))
         .catch(err=> reject(err));
   
