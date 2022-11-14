@@ -82,10 +82,12 @@ const TableGiayToHoSoDienTus = (props:any) => {
     }
     const getDataCategories = (data:any = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/search`;
-        var Data ={
-         }
+        console.log(data);
+        
         requestPOST_URL(url,data).then(res=>{
             if(res?.data){
+                console.log(res?.data);
+                
                 setDataTable(res?.data);
             }
         })
@@ -114,7 +116,7 @@ const TableGiayToHoSoDienTus = (props:any) => {
             </div>
         </div>
        
-        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {getDataCategories} action={modalAction}/>}
+        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {(searchData:any)=>getDataCategories(searchData)} action={modalAction}/>}
         {modalVisible1 && <ModalGiayToHoSoDienTuItem2 modalVisible= {modalVisible1} setModalVisible= {setModalVisible1} data={{...detailItem,hoSoDienTuId: props?.data?.hoSoDienTuId}} reRenderTable = {getDataCategories} action={modalAction}/>}        
     
     </div>)

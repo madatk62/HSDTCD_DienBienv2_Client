@@ -5,6 +5,7 @@ import * as yup from 'yup'
 import clsx from 'clsx'
 import {Upload, Select} from 'antd'
 import {toast} from 'react-toastify'
+import {shallowEqual, useSelector} from 'react-redux'
 
 import {urlStringToFileList, getUrlDinhKem} from '../../common/Common'
 import {CONFIG} from '../../../../helpers/config'
@@ -15,37 +16,32 @@ import {
   requestPOSTASP_URL,
 } from '../../../../../src/helpers/baseAPI'
 import {getBase64} from '../../../../../src/helpers/utils'
+import {userInfo} from 'os'
 const {Option} = Select
 const {Dragger} = Upload
 const maxUploadSize = 3000000
 
-const ModalFileCategoryItem = (props) => {
+const ModalFileCategoryItem1 = (props) => {
+  const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initSelectFormValue = {
     nhomGiayTo: null,
     loaiGiayTo: null,
-    oSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : null,
+    HoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : null,
   }
   var initValue = {
     MaGiayTo: '',
     TenGiayTo: '',
     UrlFile: '',
     LoaiGiayToID: '',
-    NhomGiayToCongDanID: '',
-    LoaiGiayToCongDanID: '',
+    TenLoaiGiayTo: '',
+    NhomGiayToID: '',
+    TenNhomGiayTo: '',
     HoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : '',
-    SoGiayTo: null,
-    NguonGui: 'DinhKem',
+    SoGiayTo: '',
   }
   const GiayToSchema = yup.object().shape({
     MaGiayTo: yup.string().trim().required('Mã giấy tờ là bắt buộc'),
     TenGiayTo: yup.string().trim().required('Tên giấy tờ là bắt buộc'),
-    UrlFile: yup.string(),
-    HoSoID: yup.string(),
-    SoGiayTo: yup.number().typeError('Số giấy tờ không hợp lệ'),
-    LoaiGiayToID: yup.string(),
-    NhomGiayToCongDanID: yup.string(),
-    LoaiGiayToCongDanID: yup.string(),
-    NguonGui: yup.string(),
   })
   const [isLoading, setIsLoading] = useState(false)
   const [fileUpload, setFileUpload] = useState([])
@@ -157,23 +153,27 @@ const ModalFileCategoryItem = (props) => {
         })
       } else if (props.action == 'add') {
         var postData = {
-          hoSoDienTuID: '123',
-          maGiayTo: formik.values.maGiayTo,
-          tenGiayTo: formik.values.tenGiayTo,
           maHoSoDienTu: '',
-          dinhKem: 'consectetur',
+          hoSoDienTuID: formik.values.HoSoDienTuID,
+          maGiayTo: formik.values.MaGiayTo,
+          tenGiayTo: formik.values.TenGiayTo,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+          dinhKem: formik.values.UrlFile,
+          soGiayTo: formik.values.SoGiayTo,
+          loaiGiayToID: formik.values.LoaiGiayToID,
+          tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
+          tenNhomGiayTo: formik.values.TenNhomGiayTo,
+          nhomGiayToID: formik.values.NhomGiayToID,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`
         requestPOSTASP_URL(url, postData)
           .then((res) => {
-            // if(res==200){
-            //     toast.success("Cập nhật thành công");
-            //     props.reRenderTable()
-            // }else{
-            //     toast.warning("Cập nhật thất bại");
+            if (res?.status == 200) {
+              toast.success('Cập nhật thành công')
+              const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
 
-            // }
-            setIsLoading(false)
+              props.reRenderTable(searchData)
+            } else setIsLoading(false)
             setSubmitting(false)
             props.setModalVisible(false)
           })
@@ -505,7 +505,7 @@ const ModalFileCategoryItem = (props) => {
               className='btn-sm btn-primary rounded-1 p-2  ms-2'
               onClick={handleSubmitForm}
               type='submit'
-              disabled={formik.isSubmitting || formik.isValid}
+              disabled={formik.isSubmitting || !formik.isValid}
               hidden={formik.values.NguonGui == 'DVC' ? true : false}
             >
               {!isLoading ? (
@@ -531,4 +531,4 @@ const ModalFileCategoryItem = (props) => {
     </form>
   )
 }
-export default ModalFileCategoryItem
+export default ModalFileCategoryItem1

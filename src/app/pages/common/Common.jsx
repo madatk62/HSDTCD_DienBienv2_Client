@@ -36,7 +36,7 @@ const getUrlDinhKem = async (files) => {
   return strUrl
 }
 const handleUploadFile = async (file) => {
-  var uploadUrl = `${CONFIG.BASE_HSDT_URL}UploadDinhKem`
+  var uploadUrl = `${CONFIG.BASE_HSDT_URL}/UploadDinhKem`
   let tmp = await getBase64(file)
   tmp = tmp.substring(tmp.indexOf('base64,') + 7, tmp.length)
   var body = {

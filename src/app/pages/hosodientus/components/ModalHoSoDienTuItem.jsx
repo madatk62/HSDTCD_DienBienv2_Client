@@ -175,6 +175,8 @@ const ModalHoSoDienTuItem = (props) => {
       id='file_category_detail_form'
       onSubmit={formik.handleSubmit}
     >
+      {console.log(userInfor)}
+
       <Modal
         fullscreen={'lg-down'}
         size='xl'
