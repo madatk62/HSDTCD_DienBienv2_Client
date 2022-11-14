@@ -17,6 +17,8 @@ export const AsideMenuMain = () => {
       <AsideMenuItem to='/ho-so-dien-tu' title='Hồ sơ điện tử' hasBullet={false} />
       <AsideMenuItem to='/giay-to-ho-so-dien-tu' title='Giấy tờ hồ sơ điện tử' hasBullet={false} />
       <AsideMenuItemWithSub title='Quản trị danh mục'>
+        <AsideMenuItem to='/nhom-hsdt' title='Nhóm hồ sơ' hasBullet={true} />
+        <AsideMenuItem to='/loai-hsdt' title='Loại hồ sơ' hasBullet={true} />
         <AsideMenuItem to='/group-file' title='Nhóm giấy tờ' hasBullet={true} />
         <AsideMenuItem to='/type-file' title='Loại giấy tờ' hasBullet={true} />
       </AsideMenuItemWithSub>

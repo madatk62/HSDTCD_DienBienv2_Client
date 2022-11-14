@@ -10,6 +10,8 @@ import TypeFileCategories from '../pages/categories/TypeFileCategories';
 import HoSoDienTu from '../pages/hosodientus/HoSoDienTu'
 import GiayToHoSoDienTus from '../pages/giaytohosodientus/GiayToHoSoDienTu'
 import LoaiHoSoDienTus from '../pages/loaihosodientus/LoaiHoSoDienTu'
+
+import NhomHoSoDienTus from '../pages/nhomhosodientus/NhomHoSoDienTu'
 export function PrivateRoutes() {
 
   return (
@@ -27,7 +29,7 @@ export function PrivateRoutes() {
         <Route path='/group-file' component={GroupFileCategories} />
         <Route path='/type-file' component={TypeFileCategories} />
         <Route path='/loai-hsdt' component={LoaiHoSoDienTus} />
-        <Route path='/nhom-hsdt' component={LoaiHoSoDienTus} />
+        <Route path='/nhom-hsdt' component={NhomHoSoDienTus} />
         <Route path='/ho-so-dien-tu' component={HoSoDienTu} />
         <Route path='/giay-to-ho-so-dien-tu' component={GiayToHoSoDienTus} />
         <Redirect from='/auth' to='/categories' />
