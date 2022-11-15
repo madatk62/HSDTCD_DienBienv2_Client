@@ -3,6 +3,8 @@ import {Modal, Button} from 'react-bootstrap-v5'
 import {useFormik} from 'formik'
 import * as yup from 'yup'
 import clsx from 'clsx'
+import {shallowEqual, useSelector} from 'react-redux'
+
 import {
   requestPOSTASP_URL,
   requestPOST_URL,
@@ -17,6 +19,7 @@ const GiayToSchema = yup.object().shape({
   Ten: yup.string().trim().required('Tên nhóm giấy tờ là bắt buộc'),
 })
 const ModaTypelFileCategoryItem = (props) => {
+  const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initValue = {
     Ma: props?.data?.ma ? props?.data?.ma : '',
     Ten: props?.data?.ten ? props?.data?.ten : '',
@@ -24,6 +27,9 @@ const ModaTypelFileCategoryItem = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [fileUpload, setFileUpload] = useState([])
   const [isDisableInput, setIsDisableInput] = useState(false)
+  const [searchData, setSearchData] = useState({
+    iDCongDan: userInfor.technicalId ? userInfor.technicalId : '',
+  })
   const handleSubmitForm = () => {
     var a = formik.handleSubmit()
   }
@@ -37,7 +43,7 @@ const ModaTypelFileCategoryItem = (props) => {
       setIsLoading(true)
       if (props.action == 'edit') {
         var postData = {
-          // IDCongDan: props.data.IDCongDan,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           id: props?.data?.id,
           ma: formik.values.Ma,
           ten: formik.values.Ten,
@@ -48,12 +54,12 @@ const ModaTypelFileCategoryItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          const searchData = {}
+
           props.reRenderTable(searchData)
         })
       } else if (props.action == 'add') {
         var postData = {
-          // IDCongDan: props.data.IDCongDan,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           ma: formik.values.Ma,
           ten: formik.values.Ten,
         }
@@ -63,7 +69,6 @@ const ModaTypelFileCategoryItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          const searchData = {}
           props.reRenderTable(searchData)
         })
       }

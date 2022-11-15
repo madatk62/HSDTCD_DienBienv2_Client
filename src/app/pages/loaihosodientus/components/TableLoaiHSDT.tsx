@@ -1,13 +1,18 @@
 import React, {useState,useEffect} from 'react'
+import {shallowEqual, useSelector} from 'react-redux'
 
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
 import { requestPOST_URL } from '../../../../helpers/baseAPI';
 import ModalLoaiHSDT from './ModalLoaiHSDT';
 import PageHearder from './PageHeader';
-
+import {RootState} from '@setup/index'
 const TableLoaiHSDT = (props:any) => {
+    const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
     const [modalAction, setModalAction] = useState("");
+    const [searchValue, setSearchValue] = useState({
+        iDCongDan: userInfor.technicalId?userInfor.technicalId: ""
+    });
     const column = [
         {
             title: 'Mã',
@@ -56,7 +61,7 @@ const TableLoaiHSDT = (props:any) => {
     const [detailItem, setDetailItem] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
     useEffect(()=>{
-        getDataCategories();
+        getDataCategories(searchValue);
     },[])
     const handleItem = (record: any, action:string = "view")=>{
         if(record) {
@@ -65,12 +70,9 @@ const TableLoaiHSDT = (props:any) => {
         setModalAction(action);
         setModalVisible(!modalVisible);
     }
-    const getDataCategories = (searchValue:any = {})=>{
+    const getDataCategories = (searchValue1:any = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/loaihosodientus/search`;
-        var Data ={
-        
-         }
-        requestPOST_URL(url,searchValue).then(res=>{
+        requestPOST_URL(url,searchValue1).then(res=>{
             
             
             if(res){

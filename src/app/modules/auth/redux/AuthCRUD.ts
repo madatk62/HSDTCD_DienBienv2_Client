@@ -2,13 +2,13 @@ import axios from 'axios'
 import {AuthModel} from '../models/AuthModel'
 import {UserModel} from '../models/UserModel'
 import { CONFIG } from '../../../../helpers/config'
-const API_URL = "https://localhost:5001"//process.env.REACT_APP_API_URL || 'api'
+const API_URL = (process.env.NODE_ENV === 'production') ?"":"https://localhost:5001"//process.env.REACT_APP_API_URL || 'api'
 
-export const GET_USER_BY_ACCESSTOKEN_URL = `/auth/get-user`
-export const LOGIN_URL = `/api/tokens`
-export const REGISTER_URL = `/api/users/self-register`
-export const REQUEST_PASSWORD_URL = `/api/users/self-register`
-export const GET_USER_BY_USERNAME_URL = `/api/users`
+export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/auth/get-user`
+export const LOGIN_URL = `${API_URL}/api/tokens`
+export const REGISTER_URL = `${API_URL}/api/users/self-register`
+export const REQUEST_PASSWORD_URL = `${API_URL}/api/users/self-register`
+export const GET_USER_BY_USERNAME_URL = `${API_URL}/api/users`
 // Server should return AuthModel
 export function login(username: string, password: string):Promise<any> {
  return new Promise((resolve,reject)=>{
