@@ -1,21 +1,26 @@
 import React, {useState,useEffect} from 'react'
 import {Popconfirm} from 'antd'
-
+import {shallowEqual, useSelector, connect, useDispatch, ConnectedProps} from 'react-redux'
 
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
 import { requestPOST_URL } from '../../../../helpers/baseAPI';
 import ModalHoSoDienTuItem from './ModalHoSoDienTuItem';
 import PageHearder from './PageHeader';
+import { RootState } from '@setup/index';
 
 const TableHoSoDienTus = (props:any) => {
+    const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
     const [modalAction, setModalAction] = useState("");
+    const [searchValue, setSearchValue] = useState(
+        {iDCongDan: userInfor?.technicalId? userInfor?.technicalId: ""}
+    )
     const column = [
-        {
-            title: 'Mã hồ sơ',
-            dataIndex: 'maHoSo',
-            key: 'MaHoSo',
-        },
+        // {
+        //     title: 'Mã hồ sơ',
+        //     dataIndex: 'maHoSo',
+        //     key: 'MaHoSo',
+        // },
         {
             title: 'Tên hồ sơ',
             dataIndex: 'tenHoSo',
@@ -63,8 +68,11 @@ const TableHoSoDienTus = (props:any) => {
     const [detailItem, setDetailItem] = useState({})
     const [modalVisible, setModalVisible] = useState(false);
     useEffect(()=>{
-        getDataCategories();
+        getDataCategories({iDCongDan: userInfor?.technicalId? userInfor?.technicalId: ""});
     },[])
+    useEffect(()=>{
+        getDataCategories(searchValue);
+    },[searchValue])
     const handleItem = (record: any, action:string = "view")=>{
         if(record) {
             setDetailItem(record);
@@ -73,11 +81,11 @@ const TableHoSoDienTus = (props:any) => {
         setModalAction(action);
         setModalVisible(!modalVisible);
     }
-    const getDataCategories = ()=>{
+    const getDataCategories = (searchData:any  = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/hosodientus/search`;
         var Data ={
          }
-        requestPOST_URL(url,Data).then(res=>{
+        requestPOST_URL(url,searchData).then(res=>{
             if(res?.data){
                 setDataTable(res?.data);
             }
@@ -88,7 +96,8 @@ const TableHoSoDienTus = (props:any) => {
         <PageHearder title="Danh mục hồ sơ" 
             onClickThemMoi={()=>{
                 setDetailItem({});
-                handleItem(null,"add")}}/>
+                handleItem(null,"add")}}
+            setSearchValue = {setSearchValue}    />
         <div className='card-body card-dashboard px-3 py-3'>
             <div className='card-dashboard-body table-responsive'>
                 <TableList 

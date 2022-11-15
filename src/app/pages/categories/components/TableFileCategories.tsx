@@ -3,9 +3,9 @@ import {shallowEqual, useSelector, connect, useDispatch, ConnectedProps} from 'r
 
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
-import { requestPOST_URL } from '../../../../helpers/baseAPI';
+import { requestPOST_URL,requestPOST_URLDanhMuc } from '../../../../helpers/baseAPI';
 import ModalFileCategoryItem from './ModalFileCategoryItem';
-import PageHearder from '../../../pages/components/PageHeader';
+import PageHearder from './PageHeader';
 import {RootState} from '../../../../setup'
 const TableFileCategories = (props:any) => {
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
@@ -74,7 +74,7 @@ const TableFileCategories = (props:any) => {
         var Data = {
             idCongDan: userInfor.technicalId?userInfor.technicalId:"f4f98407-6170-4fe4-8a3c-ceacb394ad90"
         }
-        requestPOST_URL(url,Data).then(res=>{
+        requestPOST_URLDanhMuc(url,Data).then(res=>{
             if(res.error.code ==200){
                 setDataTable(res.data);
             }

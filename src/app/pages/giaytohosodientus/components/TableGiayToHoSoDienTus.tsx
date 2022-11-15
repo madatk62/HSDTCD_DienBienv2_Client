@@ -112,9 +112,9 @@ const TableGiayToHoSoDienTus = (props:any) => {
             </div>
         </div>
        
-        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {(searchData:any)=>getDataCategories(searchData)} action={modalAction}/>}
-        {modalVisible1 && <ModalGiayToHoSoDienTuItem2 modalVisible= {modalVisible1} setModalVisible= {setModalVisible1} data={{...detailItem,hoSoDienTuId: props?.data?.hoSoDienTuId}} reRenderTable = {getDataCategories} action={modalAction}/>}        
-    
+        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={{...detailItem,hoSoDienTuID: props?.data?.hoSoDienTuID?props?.data?.hoSoDienTuID:null}} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}
+        {modalVisible1 && <ModalGiayToHoSoDienTuItem2 modalVisible= {modalVisible1} setModalVisible= {setModalVisible1} data={{...detailItem,hoSoDienTuID: props?.data?.hoSoDienTuID?props?.data?.hoSoDienTuID:null}} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}        
+     
     </div>)
 }
 

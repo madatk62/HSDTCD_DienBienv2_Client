@@ -32,7 +32,7 @@ const AsideDefault: FC = () => {
             className='h-40px logo'
             src={toAbsoluteUrl('/media/logos/quochuy.png')}
           />
-          <span className="logo logo-title fs-6 ms-2 fw-bolder"> Ứng dụng điều hành </span>
+          <span className="logo logo-title fs-6 ms-2 fw-bolder">Hồ sơ điện tử</span>
         </Link>
         {/* end::Logo */}
 

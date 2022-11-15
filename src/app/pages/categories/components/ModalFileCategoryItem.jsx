@@ -11,6 +11,7 @@ import {CONFIG} from '../../../../helpers/config'
 import {
   request_UploadFile,
   requestPOST_URL,
+  requestPOST_URLDanhMuc,
   requestPOST_DanhMuc,
   requestPOSTASP_URL,
 } from '../../../../../src/helpers/baseAPI'
@@ -136,7 +137,7 @@ const ModalFileCategoryItem = (props) => {
           SoGiayTo: formik.values.SoGiayTo,
         }
         var url = ` ${CONFIG.BASE_HSDT_URL}/SuaGiayTo`
-        requestPOST_URL(url, putData).then((res) => {
+        requestPOST_URLDanhMuc(url, putData).then((res) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)

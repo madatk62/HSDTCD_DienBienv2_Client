@@ -159,9 +159,9 @@ const ModalFileCategoryItem1 = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
+          // const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
 
-          props.reRenderTable(searchData)
+          props.reRenderTable(props.searchData)
         })
       } else if (props.action == 'add') {
         var postData = {
@@ -182,9 +182,9 @@ const ModalFileCategoryItem1 = (props) => {
           .then((res) => {
             if (res?.status == 200) {
               toast.success('Cập nhật thành công')
-              const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
+              // const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
 
-              props.reRenderTable(searchData)
+              props.reRenderTable(props.searchData)
             } else setIsLoading(false)
             setSubmitting(false)
             props.setModalVisible(false)

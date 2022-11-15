@@ -12,8 +12,10 @@ import {CONFIG} from '../../../../helpers/config'
 import {
   request_UploadFile,
   requestPOST_URL,
+  requestPOST_URLDanhMuc,
   requestPOST_DanhMuc,
   requestPOSTASP_URL,
+  requestPUT_URL,
 } from '../../../../helpers/baseAPI'
 import {getBase64} from '../../../../helpers/utils'
 const {Option} = Select
@@ -117,7 +119,7 @@ const ModalFileCategoryItem = (props) => {
         : 'f4f98407-6170-4fe4-8a3c-ceacb394ad90',
     }
 
-    const res = await requestPOST_URL(url, Data)
+    const res = await requestPOST_URLDanhMuc(url, Data)
     return res.data
   }
   const getDetailGiayToHSDT = async (id) => {
@@ -173,38 +175,53 @@ const ModalFileCategoryItem = (props) => {
       setIsLoading(true)
       if (props.action == 'edit') {
         var putData = {
-          ID: props.data.ID,
-          MaGiayTo: formik.values.MaGiayTo,
-          TenGiayTo: formik.values.TenGiayTo,
-          UrlFile: formik.values.UrlFile,
+          id: props?.data?.id,
+          maHoSoDienTu: '',
+          hoSoDienTuID: formik.values.HoSoDienTuID,
+          maGiayTo: formik.values.MaGiayTo,
+          tenGiayTo: formik.values.TenGiayTo,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+          dinhKem: formik.values.UrlFile,
+          soGiayTo: formik.values.SoGiayTo,
+          loaiGiayToID: formik.values.LoaiGiayToID,
+          tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
+          tenNhomGiayTo: formik.values.TenNhomGiayTo,
+          nhomGiayToID: formik.values.NhomGiayToID,
         }
-        var url = ` ${CONFIG.BASE_HSDT_URL}/SuaGiayTo`
-        requestPOST_URL(url, putData).then((res) => {
+        console.log(putData)
+        var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/${props?.data?.id}`
+        requestPUT_URL(url, putData).then((res) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          props.reRenderTable()
+          // const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
+
+          props.reRenderTable(props.searchData)
         })
       } else if (props.action == 'add') {
         var postData = {
-          hoSoDienTuID: '123',
-          maGiayTo: formik.values.maGiayTo,
-          tenGiayTo: formik.values.tenGiayTo,
           maHoSoDienTu: '',
-          dinhKem: 'consectetur',
+          hoSoDienTuID: formik.values.HoSoDienTuID,
+          maGiayTo: formik.values.MaGiayTo,
+          tenGiayTo: formik.values.TenGiayTo,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+          dinhKem: formik.values.UrlFile,
+          soGiayTo: formik.values.SoGiayTo,
+          loaiGiayToID: formik.values.LoaiGiayToID,
+          tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
+          tenNhomGiayTo: formik.values.TenNhomGiayTo,
+          nhomGiayToID: formik.values.NhomGiayToID,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`
         requestPOSTASP_URL(url, postData)
           .then((res) => {
-            // if(res==200){
-            //     toast.success("Cập nhật thành công");
-            //     props.reRenderTable()
-            // }else{
-            //     toast.warning("Cập nhật thất bại");
+            if (res?.status == 200) {
+              toast.success('Cập nhật thành công')
+              // const searchData = {iDCongDan: userInfor.technicalId ? userInfor.technicalId : null}
 
-            // }
-            setIsLoading(false)
+              props.reRenderTable(props.searchData)
+            } else setIsLoading(false)
             setSubmitting(false)
             props.setModalVisible(false)
           })

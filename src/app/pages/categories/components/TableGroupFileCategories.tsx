@@ -2,7 +2,7 @@ import React, {useState,useEffect} from 'react'
 import {Popconfirm} from 'antd'
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
-import { requestPOST_URL } from '../../../../helpers/baseAPI';
+import { requestPOST_URL,requestPOST_URLDanhMuc } from '../../../../helpers/baseAPI';
 import ModaGrouplFileCategoryItem from './ModaGrouplFileCategoryItem';
 import PageHearder from '../../../pages/components/PageHeader';
 
@@ -79,7 +79,7 @@ const TableGroupFileCategories = (props:any) => {
              "regex": false
            }
          }
-        requestPOST_URL(url,Data).then(res=>{
+         requestPOST_URLDanhMuc(url,Data).then(res=>{
             if(res.error.code ==200){
                 setDataTable(res.data.data);
             }

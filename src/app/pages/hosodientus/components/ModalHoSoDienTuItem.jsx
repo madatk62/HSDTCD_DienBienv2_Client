@@ -13,13 +13,17 @@ import {CONFIG} from '../../../../helpers/config'
 import TableGiayToHoSoDienTus from '../../giaytohosodientus/components/TableGiayToHoSoDienTus'
 // const base_url = "https://danhmuc.hanhchinhcong.net/_layouts/15/TD.CSDLChung.WCF/CSDLChungService.svc";
 const {Option} = Select
-const searchGiayToHSDTData = {}
 
 const GiayToSchema = yup.object().shape({
   tenHoSo: yup.string().trim().required('Tên hồ sơ là bắt buộc'),
 })
 const ModalHoSoDienTuItem = (props) => {
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
+
+  const searchGiayToHSDTData = {
+    idCongDan: userInfor.technicalId ? userInfor.technicalId : '',
+    hoSoDienTuID: props?.data?.id ? props?.data?.id : '',
+  }
   var initSelectFormValue = {
     thuTuc: props?.data?.maThuTuc ? props?.data?.maThuTuc : null,
     nhomHoSo: props?.data?.maNhomHoSo ? props?.data?.maNhomHoSo : null,
@@ -83,11 +87,6 @@ const ModalHoSoDienTuItem = (props) => {
   }
 
   const [dsThuTuc, setDsThuTuc] = useState([])
-  const handleSelectThuTuc = (val) => {
-    formik.values.maThuTuc = val?.value ? val?.value : null
-    formik.values.tenThuTuc = val?.children ? val?.childrenval : null
-    setSelectedOption({...selectedOption, thuTuc: val?.value})
-  }
   const handleSubmitForm = () => {
     var a = formik.handleSubmit()
   }
@@ -125,7 +124,7 @@ const ModalHoSoDienTuItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          props.reRenderTable()
+          props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
         })
       } else if (props.action == 'add') {
         var postData = {
@@ -147,7 +146,7 @@ const ModalHoSoDienTuItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          props.reRenderTable()
+          props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
         })
       }
 
@@ -175,8 +174,6 @@ const ModalHoSoDienTuItem = (props) => {
       id='file_category_detail_form'
       onSubmit={formik.handleSubmit}
     >
-      {console.log(userInfor)}
-
       <Modal
         fullscreen={'lg-down'}
         size='xl'
@@ -272,7 +269,9 @@ const ModalHoSoDienTuItem = (props) => {
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
                 onChange={(val, text) => {
-                  handleSelectThuTuc(text)
+                  formik.values.maThuTuc = val
+                  formik.values.tenThuTuc = text?.children
+                  setSelectedOption({...selectedOption, thuTuc: val})
                 }}
               >
                 {dsThuTuc.map((item) => {
@@ -376,12 +375,17 @@ const ModalHoSoDienTuItem = (props) => {
           </div>
           <div className=''>
             {props.action == 'view' ? (
-              <TableGiayToHoSoDienTus lstAction={[]} action='view' />
+              <TableGiayToHoSoDienTus
+                lstAction={[]}
+                searchData={searchGiayToHSDTData}
+                data={{hoSoDienTuID: props?.data?.id}}
+                action='view'
+              />
             ) : props.action == 'edit' ? (
               <TableGiayToHoSoDienTus
                 lstAction={['btnView', 'btnEdit']}
                 searchData={searchGiayToHSDTData}
-                data={{hoSoDienTuId: props?.data?.id}}
+                data={{hoSoDienTuID: props?.data?.id}}
               />
             ) : null}
           </div>

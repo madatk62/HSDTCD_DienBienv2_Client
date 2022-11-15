@@ -65,7 +65,27 @@ export const requestGET_URL = async (URL) => {
     return null
   }
 }
+export const requestPOST_URLDanhMuc = async (URL, data) => {
+  try {
+    const res = await axios({
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        // 'tenant':'root',
+        Authorization: `Bearer ${CONFIG.GETWAY_TOKEN_DienBien}`
+        //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+        // "Access-Control-Allow-Origin":"*",
+        // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+      },
+      url: URL,
+      data,
+    })
 
+    return res.data
+  } catch (error) {
+    return null
+  }
+}
 export const requestPOST_URL = async (URL, data) => {
   try {
     const res = await axios({
@@ -94,7 +114,7 @@ export const requestPOST_DanhMuc= async (URL, data) => {
       headers: {
         'Content-Type': 'application/json',
         // 'tenant':'root',
-        // Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
+         Authorization: `Bearer ${CONFIG.GETWAY_TOKEN_DienBien}`
         //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
         // "Access-Control-Allow-Origin":"*",
         // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
@@ -143,7 +163,7 @@ export const request_UploadFile = async (URL, data) => {
           'Content-Type': 'application/json',
           // 'tenant':'root',
           // Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
-          //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+             Authorization: `Bearer ${CONFIG.GETWAY_TOKEN_DienBien}`,
           // "Access-Control-Allow-Origin":"*",
           // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
         },
