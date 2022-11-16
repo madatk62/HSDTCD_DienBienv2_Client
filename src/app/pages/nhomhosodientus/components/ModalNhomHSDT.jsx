@@ -3,20 +3,19 @@ import {Modal, Button} from 'react-bootstrap-v5'
 import {useFormik} from 'formik'
 import * as yup from 'yup'
 import clsx from 'clsx'
-import {
-  requestPOSTASP_URL,
-  requestPOST_URL,
-  requestPUT_URL,
-} from '../../../../helpers/baseAPI'
-import {Upload} from 'antd'
 import {toast} from 'react-toastify'
+import {Upload} from 'antd'
+import {shallowEqual, useSelector} from 'react-redux'
+
+import {requestPOSTASP_URL, requestPOST_URL, requestPUT_URL} from '../../../../helpers/baseAPI'
 import {CONFIG} from '../../../../helpers/config'
 
 const GiayToSchema = yup.object().shape({
-  Ma: yup.string().trim().required('Mã nhóm giấy tờ là bắt buộc'),
-  Ten: yup.string().trim().required('Tên nhóm giấy tờ là bắt buộc'),
+  Ma: yup.string().trim().required('Mã nhóm hồ sơ là bắt buộc'),
+  Ten: yup.string().trim().required('Tên nhóm hồ sơ là bắt buộc'),
 })
 const ModaTypelFileCategoryItem = (props) => {
+  const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initValue = {
     Ma: props?.data?.ma ? props?.data?.ma : '',
     Ten: props?.data?.ten ? props?.data?.ten : '',
@@ -24,6 +23,10 @@ const ModaTypelFileCategoryItem = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [fileUpload, setFileUpload] = useState([])
   const [isDisableInput, setIsDisableInput] = useState(false)
+  const [searchData, setSearchData] = useState({
+    iDCongDan: userInfor.technicalId ? userInfor.technicalId : '',
+  })
+
   const handleSubmitForm = () => {
     var a = formik.handleSubmit()
   }
@@ -37,7 +40,7 @@ const ModaTypelFileCategoryItem = (props) => {
       setIsLoading(true)
       if (props.action == 'edit') {
         var postData = {
-          // IDCongDan: props.data.IDCongDan,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           id: props?.data?.id,
           ma: formik.values.Ma,
           ten: formik.values.Ten,
@@ -48,12 +51,11 @@ const ModaTypelFileCategoryItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          const searchData = {}
           props.reRenderTable(searchData)
         })
       } else if (props.action == 'add') {
         var postData = {
-          // IDCongDan: props.data.IDCongDan,
+          iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           ma: formik.values.Ma,
           ten: formik.values.Ten,
         }
@@ -63,7 +65,6 @@ const ModaTypelFileCategoryItem = (props) => {
           setIsLoading(false)
           setSubmitting(false)
           props.setModalVisible(false)
-          const searchData = {}
           props.reRenderTable(searchData)
         })
       }
@@ -107,7 +108,10 @@ const ModaTypelFileCategoryItem = (props) => {
         backdrop='static'
       >
         <Modal.Header className='bg-primary px-4 py-3'>
-          <Modal.Title className='text-white'>Chi tiết</Modal.Title>
+          <Modal.Title className='text-white'>
+            {' '}
+            {props.action == 'view' ? 'Chi tiết' : props.action == 'add' ? 'Thêm mới' : 'Chỉnh sửa'}
+          </Modal.Title>
           <button
             type='button'
             className='btn-close btn-close-white'
@@ -118,11 +122,9 @@ const ModaTypelFileCategoryItem = (props) => {
         <Modal.Body>
           <div className='row fv-row mb-7'>
             <div className='col-xl-12 col-lg-12 col-md-12'>
-              <label className='form-label fw-bolder text-dark fs-6 required'>
-                Mã nhóm giấy tờ
-              </label>
+              <label className='form-label fw-bolder text-dark fs-6 required'>Mã nhóm hồ sơ</label>
               <input
-                placeholder='Mã giấy tờ'
+                placeholder='Mã nhóm hồ sơ'
                 type='text'
                 autoComplete='off'
                 disabled={isDisableInput}
@@ -148,9 +150,9 @@ const ModaTypelFileCategoryItem = (props) => {
           </div>
           <div className='row fv-row mb-7'>
             <div className='col-xl-12 col-lg-12 col-md-12'>
-              <label className='form-label fw-bolder text-dark fs-6 required'>Tên giấy tờ</label>
+              <label className='form-label fw-bolder text-dark fs-6 required'>Tên nhóm hồ sơ</label>
               <textarea
-                placeholder='Tên giấy tờ'
+                placeholder='Tên nhóm hồ sơ'
                 rows={3}
                 disabled={isDisableInput}
                 autoComplete='off'

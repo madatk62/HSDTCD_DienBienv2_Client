@@ -15,8 +15,8 @@ import {toast} from 'react-toastify'
 import {CONFIG} from '../../../../helpers/config'
 
 const GiayToSchema = yup.object().shape({
-  Ma: yup.string().trim().required('Mã nhóm giấy tờ là bắt buộc'),
-  Ten: yup.string().trim().required('Tên nhóm giấy tờ là bắt buộc'),
+  Ma: yup.string().trim().required('Mã loại hồ sơ là bắt buộc'),
+  Ten: yup.string().trim().required('Tên loại hồ sơ là bắt buộc'),
 })
 const ModaTypelFileCategoryItem = (props) => {
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
@@ -112,7 +112,9 @@ const ModaTypelFileCategoryItem = (props) => {
         backdrop='static'
       >
         <Modal.Header className='bg-primary px-4 py-3'>
-          <Modal.Title className='text-white'>Chi tiết</Modal.Title>
+          <Modal.Title className='text-white'>
+            {props.action == 'view' ? 'Chi tiết' : props.action == 'add' ? 'Thêm mới' : 'Chỉnh sửa'}
+          </Modal.Title>
           <button
             type='button'
             className='btn-close btn-close-white'
@@ -123,11 +125,9 @@ const ModaTypelFileCategoryItem = (props) => {
         <Modal.Body>
           <div className='row fv-row mb-7'>
             <div className='col-xl-12 col-lg-12 col-md-12'>
-              <label className='form-label fw-bolder text-dark fs-6 required'>
-                Mã nhóm giấy tờ
-              </label>
+              <label className='form-label fw-bolder text-dark fs-6 required'>Mã loại hồ sơ</label>
               <input
-                placeholder='Mã giấy tờ'
+                placeholder='Mã loại hồ sơ'
                 type='text'
                 autoComplete='off'
                 disabled={isDisableInput}
@@ -153,9 +153,9 @@ const ModaTypelFileCategoryItem = (props) => {
           </div>
           <div className='row fv-row mb-7'>
             <div className='col-xl-12 col-lg-12 col-md-12'>
-              <label className='form-label fw-bolder text-dark fs-6 required'>Tên giấy tờ</label>
+              <label className='form-label fw-bolder text-dark fs-6 required'>Tên loại hồ sơ</label>
               <textarea
-                placeholder='Tên giấy tờ'
+                placeholder='Tên loại hồ sơ'
                 rows={3}
                 disabled={isDisableInput}
                 autoComplete='off'
