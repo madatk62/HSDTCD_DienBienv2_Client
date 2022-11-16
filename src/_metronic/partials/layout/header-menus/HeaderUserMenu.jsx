@@ -47,7 +47,7 @@ const HeaderUserMenu = () => {
 
       <div className='separator my-2'></div> */}
 
-      <div className='menu-item px-5'>
+      {/* <div className='menu-item px-5'>
         <Link to={'/profile'} className='menu-link px-5'>
           Thông tin cá nhân
         </Link>
@@ -70,7 +70,7 @@ const HeaderUserMenu = () => {
         <a onClick={removeData} className='menu-link px-5'>
           Làm mới thông tin người dùng
         </a>
-      </div>
+      </div> */}
 
       {/* <div className='menu-item px-5 my-1'>
         <Link to='/crafted/account/settings' className='menu-link px-5'>

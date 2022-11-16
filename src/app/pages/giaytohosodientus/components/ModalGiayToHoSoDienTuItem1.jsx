@@ -66,6 +66,7 @@ const ModalFileCategoryItem1 = (props) => {
       order: [],
       start: 0,
       length: 100,
+      IDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
       search: {
         value: '',
         regex: false,
@@ -84,6 +85,7 @@ const ModalFileCategoryItem1 = (props) => {
       order: [],
       start: 0,
       length: 100,
+      IDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
       search: {
         value: '',
         regex: false,
@@ -95,7 +97,9 @@ const ModalFileCategoryItem1 = (props) => {
     }
     // load ds hồ sơ điện tử cá nhân
     var urlHSDT = `${CONFIG.BASE_DBHSDT_URL}/hosodientus/search`
-    var Data = {}
+    var Data = {
+      iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+    }
     var resHSDT = await requestPOST_URL(urlHSDT, Data)
     setDsHoSo(resHSDT?.data)
   }

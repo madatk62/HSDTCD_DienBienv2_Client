@@ -42,7 +42,8 @@ const ModalHoSoDienTuItem = (props) => {
   }
   const [isLoading, setIsLoading] = useState(false)
   const [isDisableInput, setIsDisableInput] = useState(false)
-
+  const [isSubmited, setIsSubmited] = useState(false)
+  const [hoSoDienTuID, setHoSoDienTuID] = useState(null)
   // init formdata
   const [dsNhomGiayTo, setDsNhomGiayTo] = useState([])
   const [dsLoaiGiayTo, setDsLoaiGiayTo] = useState([])
@@ -51,14 +52,18 @@ const ModalHoSoDienTuItem = (props) => {
   const LoadFormDaTa = async () => {
     // load ds nhom giay to
     var urlDsNhomHGiayTo = `${CONFIG.BASE_DBHSDT_URL}/nhomhosodientus/search`
-    var searchBodyNhomHGiayTo = {}
+    var searchBodyNhomHGiayTo = {
+      iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+    }
     var dataNhomHGiayTo = await requestPOST_URL(urlDsNhomHGiayTo, searchBodyNhomHGiayTo)
     if (dataNhomHGiayTo?.data) {
       setDsNhomGiayTo(dataNhomHGiayTo?.data)
     }
     // load ds loai giay to
     var urlDsLoaiHGiayTo = `${CONFIG.BASE_DBHSDT_URL}/loaihosodientus/search`
-    var searchBodyLoaiHGiayTo = {}
+    var searchBodyLoaiHGiayTo = {
+      iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+    }
     var dataLoaiHGiayTo = await requestPOST_URL(urlDsLoaiHGiayTo, searchBodyLoaiHGiayTo)
     if (dataLoaiHGiayTo?.data) {
       setDsLoaiGiayTo(dataLoaiHGiayTo?.data)
@@ -88,7 +93,39 @@ const ModalHoSoDienTuItem = (props) => {
 
   const [dsThuTuc, setDsThuTuc] = useState([])
   const handleSubmitForm = () => {
-    var a = formik.handleSubmit()
+    if (hoSoDienTuID) {
+      props.setModalVisible(false)
+      setHoSoDienTuID(null)
+      props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
+    } else {
+      var a = formik.handleSubmit()
+    }
+  }
+  const handleLuuHoSo = () => {
+    var postData = {
+      maHoSo: formik.values.maHoSo ? formik.values.maHoSo : '',
+      tenHoSo: formik.values.tenHoSo ? formik.values.tenHoSo : '',
+      maThuTuc: formik.values.maThuTuc ? formik.values.maThuTuc : '',
+      tenThuTuc: formik.values.tenThuTuc ? formik.values.tenThuTuc : '',
+      tenNhomHoSo: formik.values.tenNhomHoSo ? formik.values.tenNhomHoSo : '',
+      maNhomHoSo: formik.values.maNhomHoSo ? formik.values.maNhomHoSo : '',
+      tenLoaiHoSo: formik.values.tenLoaiHoSo ? formik.values.tenLoaiHoSo : '',
+      maLoaiHoSo: formik.values.maLoaiHoSo ? formik.values.maLoaiHoSo : '',
+      idCongDan: userInfor.technicalId ? userInfor.technicalId : '',
+      taiKhoanTao: userInfor.userName ? userInfor.userName : '',
+    }
+
+    var url = ` ${CONFIG.BASE_DBHSDT_URL}/hosodientus`
+    requestPOST_ASP(url, postData).then((res) => {
+      toast.success('Thêm mới thành công')
+      if (res?.data?.data) {
+        setHoSoDienTuID(res?.data?.data)
+        setIsSubmited(true)
+      }
+      formik.setIsLoading(false)
+      formik.setSubmitting(false)
+      props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
+    })
   }
   const handleClose = () => {
     formik.setValues(initValue)
@@ -375,6 +412,22 @@ const ModalHoSoDienTuItem = (props) => {
               </Select>
             </div>
           </div>
+          <div className='row fv-row mb-7'>
+            <div className='col-xl-12 col-lg-12 col-md-12 d-flex'>
+              <Button
+                className='btn btn-primary btn-sm m-btn m-btn--icon py-2 me-2'
+                type='button'
+                disabled={formik.isSubmitting || !formik.isValid || isSubmited}
+                onClick={handleLuuHoSo}
+              >
+                <span>
+                  <i className='fas fa-save'></i>
+                  <span className=''>Lưu hồ sơ điện tử</span>
+                </span>
+              </Button>
+            </div>
+            <span className='bullet bullet-horizontal flex-grow-1 bg-secondary h-1px mt-5'></span>
+          </div>
           <div className=''>
             {props.action == 'view' ? (
               <TableGiayToHoSoDienTus
@@ -385,9 +438,16 @@ const ModalHoSoDienTuItem = (props) => {
               />
             ) : props.action == 'edit' ? (
               <TableGiayToHoSoDienTus
-                lstAction={['btnView', 'btnEdit']}
+                lstAction={['btnView', 'btnEdit', 'btnDel']}
                 searchData={searchGiayToHSDTData}
                 data={{hoSoDienTuID: props?.data?.id}}
+              />
+            ) : props.action == 'add' ? (
+              <TableGiayToHoSoDienTus
+                lstAction={['btnView', 'btnEdit', 'btnDel']}
+                searchData={searchGiayToHSDTData}
+                data={{hoSoDienTuID: hoSoDienTuID}}
+                action='addFromHSDT'
               />
             ) : null}
           </div>

@@ -105,11 +105,26 @@ const TableGiayToHoSoDienTus = (props:any) => {
             }
         
         }else
+        if(action == "addFromHSDT"){
+                
+           if(props?.data?.hoSoDienTuID){
+            setDetailItem({
+                hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+            });
+            setModalAction("add");
+            setModalVisible(!modalVisible);
+           }else{
+            toast.warning("Lưu thông tin hồ sơ trước")
+           }
+          
+           
+        }else
         {   if(action == "add"){
                 setDetailItem({
-                    hoSoDienTuID:    props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+                    hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
                 });
             }else
+            
             if(action == "edit"){
                 if(record) {
                     setDetailItem(record);
@@ -134,7 +149,12 @@ const TableGiayToHoSoDienTus = (props:any) => {
             action={props.action}
             onClickThemMoi={()=>{
                 setDetailItem({});
-                handleItem(null,"add")}}     
+                if(props.action=='addFromHSDT'){
+                    handleItem(null,"addFromHSDT")
+                }else{
+                    handleItem(null,"add")}
+            }}
+                 
             onClickThemMoiTuDs={()=>{
                 setModalVisible1(true)
                 setDetailItem({
