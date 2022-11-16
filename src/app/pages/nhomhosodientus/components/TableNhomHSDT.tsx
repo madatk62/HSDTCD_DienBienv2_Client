@@ -109,7 +109,7 @@ const TableNhomHSDT = (props:any) => {
       
     }
     return(<div>
-          <PageHearder title="Danh mục hồ sơ" onClickThemMoi={()=>{
+          <PageHearder title="Danh sách nhóm hồ sơ" onClickThemMoi={()=>{
             setDetailItem({});
             handleItem(null,"add")}}/>
         <div className='card-body card-dashboard px-3 py-3'>

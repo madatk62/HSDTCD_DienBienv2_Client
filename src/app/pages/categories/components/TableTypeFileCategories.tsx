@@ -1,12 +1,17 @@
 import React, {useState,useEffect} from 'react'
 import {Popconfirm} from 'antd'
+import {toast} from "react-toastify"
+import {shallowEqual, useSelector} from 'react-redux'
+
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
-import { requestPOST_URL,requestPOST_URLDanhMuc } from '../../../../helpers/baseAPI';
-import ModaGrouplFileCategoryItem from './ModaGrouplFileCategoryItem';
+import { requestPOST_URLDanhMuc,requestDELETE_ASP,requestPOST_DanhMuc } from '../../../../helpers/baseAPI';
+import ModaTypelFileCategoryItem from './ModaTypelFileCategoryItem';
 import PageHearder from '../../../pages/components/PageHeader';
+import { RootState } from '@setup/index';
 
 const TableTypeFileCategories = (props:any) => {
+    const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any
     const [modalAction, setModalAction] = useState("");
     const column = [
         {
@@ -23,7 +28,7 @@ const TableTypeFileCategories = (props:any) => {
             title: 'Thao tác',
             dataIndex: '',
             key:'action',
-            width:'10%',
+            width:'15%',
             render:(text:string,record:any) =>{
                 return(
                     <div>
@@ -47,6 +52,22 @@ const TableTypeFileCategories = (props:any) => {
                             >
                             <i className='fa fa-edit'></i>
                         </a>
+                        <Popconfirm
+                             title='Bạn có chắc chắn muốn xoá?'
+                             onConfirm={() => {
+                                handleItem(record,"delete");
+                              }}
+                              okText='Xoá'
+                              cancelText='Huỷ'
+                        >
+                            <a
+                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                                data-toggle='m-tooltip'
+                                title='xoá'
+                                >
+                                <i className='fa fa-trash'></i>
+                            </a>    
+                        </Popconfirm>
                     </div>
                 )
             }
@@ -58,12 +79,25 @@ const TableTypeFileCategories = (props:any) => {
     useEffect(()=>{
         getDataCategories();
     },[])
-    const handleItem = (record: any, action:string = "view")=>{
-        if(record) {
-            setDetailItem(record);
+    const handleItem = async(record: any, action:string = "view")=>{
+        if(action == "delete"){
+            var urlDel = ` ${CONFIG.BASE_HSDT_URL}/XoaDuLieuLoaiGT`
+            var delData = { 
+                ID: record.ID
+            }
+           
+            
+            requestPOST_DanhMuc(urlDel, delData).then((res) => {
+                toast.success('Xoá thành công');
+                getDataCategories();
+            })
+        }else{
+            if(record) {
+                setDetailItem(record);
+            }
             setModalAction(action);
-        }
-        setModalVisible(!modalVisible);
+            setModalVisible(!modalVisible);
+        }    
     }
     const getDataCategories = ()=>{
         var url = `${CONFIG.BASE_HSDT_URL}/DanhSachLoaiGiayTo`;
@@ -77,7 +111,8 @@ const TableTypeFileCategories = (props:any) => {
            "search": {
              "value": "",
              "regex": false
-           }
+           },
+           "IDCongDan" : userInfor.technicalId ? userInfor.technicalId : null 
          }
          requestPOST_URLDanhMuc(url,Data).then(res=>{
             if(res.error.code ==200){
@@ -87,20 +122,20 @@ const TableTypeFileCategories = (props:any) => {
       
     }
     return(<div>
-          <PageHearder title="Danh mục hồ sơ" onClickThemMoi={()=>{
+         <PageHearder title="Danh sách loại giấy tờ" onClickThemMoi={()=>{
             setDetailItem({});
             handleItem(null,"add")}}/>
         <div className='card-body card-dashboard px-3 py-3'>
             <div className='card-dashboard-body table-responsive'>
-                <TableList 
-                    dataTable = {dataTable}
-                    columns = {column}
-                    isPagination ={true}
-                />
+            <TableList 
+                dataTable = {dataTable}
+                columns = {column}
+                isPagination ={true}
+            />
             </div>
         </div>
-        
-        {modalVisible && <ModaGrouplFileCategoryItem modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {getDataCategories} action={modalAction}/>}
+       
+        {modalVisible && <ModaTypelFileCategoryItem modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {getDataCategories} action={modalAction}/>}
     </div>)
 }
 

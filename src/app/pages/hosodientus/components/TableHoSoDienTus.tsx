@@ -126,7 +126,7 @@ const TableHoSoDienTus = (props:any) => {
       
     }
     return(<div>
-        <PageHearder title="Danh mục hồ sơ" 
+        <PageHearder title="Danh sách hồ sơ điện tử" 
             onClickThemMoi={()=>{
                 setDetailItem({});
                 handleItem(null,"add")}}
