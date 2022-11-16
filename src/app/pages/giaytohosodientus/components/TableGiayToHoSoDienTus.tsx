@@ -156,10 +156,24 @@ const TableGiayToHoSoDienTus = (props:any) => {
             }}
                  
             onClickThemMoiTuDs={()=>{
-                setModalVisible1(true)
-                setDetailItem({
-                    hoSoDienTuID:    props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
-                });
+               
+                if(props.action=='addFromHSDT'){
+                    if(props?.data?.hoSoDienTuID){
+                        setDetailItem({
+                            hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+                        });
+                        setModalAction("add");
+                        setModalVisible1(!modalVisible1);
+                       }else{
+                        toast.warning("Lưu thông tin hồ sơ trước")
+                       }
+                }else{
+                    setDetailItem({
+                        hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+                    });
+                    setModalVisible1(true);
+                    setModalAction("add");
+                }
                 }}  
 
                 />
