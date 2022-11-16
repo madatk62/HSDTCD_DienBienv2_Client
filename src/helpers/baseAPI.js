@@ -128,9 +128,8 @@ export const requestPOST_DanhMuc= async (URL, data) => {
     return null
   }
 }
-export const requestPOSTASP_URL = async (URL, data) => {
+export const requestPOST_ASP = async (URL, data) => {
   try {
-   console.log(JSON.stringify(data)); 
     return new Promise((resolve,reject)=>{
       axios({
         method: 'POST',
@@ -145,6 +144,30 @@ export const requestPOSTASP_URL = async (URL, data) => {
         },
         url: URL,
         data: JSON.stringify(data),
+      }).then(res=> resolve(res))
+        .catch(err=> reject(err));
+  
+    })
+
+  } catch (error) {
+    return null
+  }
+}
+export const requestDELETE_ASP = async (URL, data= null) => {
+  try {
+    return new Promise((resolve,reject)=>{
+      axios({
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8', 
+          'Accept': 'application/json', 
+          // 'tenant':'root',
+          Authorization: `Bearer ${CONFIG.SECURITY_TOKEN}`
+          //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+          //  "Access-Control-Allow-Origin":"*",
+          //  'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+        },
+        url: URL
       }).then(res=> resolve(res))
         .catch(err=> reject(err));
   

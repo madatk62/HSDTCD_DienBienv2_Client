@@ -1,8 +1,10 @@
 import React, {useState,useEffect} from 'react'
 import {Popconfirm} from 'antd'
+import {toast} from 'react-toastify'
+
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
-import { requestPOST_URL } from '../../../../helpers/baseAPI';
+import { requestPOST_URL,requestDELETE_ASP } from '../../../../helpers/baseAPI';
 import ModalGiayToHoSoDienTuItem from './ModalGiayToHoSoDienTuItem';
 import PageHearder from './PageHeader';
 import ModalGiayToHoSoDienTuItem1 from './ModalGiayToHoSoDienTuItem1';
@@ -23,7 +25,8 @@ const TableGiayToHoSoDienTus = (props:any) => {
                                 >
                                 <i className='fa fa-eye'></i>
                             </a>)
-                    }else if(actionItem== "btnEdit"){
+                    } else
+                    if(actionItem== "btnEdit"){
                         return ( <a
                             className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
                             data-toggle='m-tooltip'
@@ -34,6 +37,24 @@ const TableGiayToHoSoDienTus = (props:any) => {
                             >
                             <i className='fa fa-edit'></i>
                         </a>)
+                    }else
+                    if(actionItem== "btnDel"){
+                        return ( <Popconfirm
+                            title='Bạn có chắc chắn muốn xoá?'
+                            onConfirm={() => {
+                               handleItem(record,"delete");
+                             }}
+                             okText='Xoá'
+                             cancelText='Huỷ'
+                       >
+                           <a
+                               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                               data-toggle='m-tooltip'
+                               title='xoá'
+                               >
+                               <i className='fa fa-trash'></i>
+                           </a>    
+                       </Popconfirm>)
                     }
                 })}
               
@@ -58,7 +79,7 @@ const TableGiayToHoSoDienTus = (props:any) => {
             title: 'Thao tác',
             dataIndex: '',
             key:'action',
-            width:'10%',
+            width:'15%',
             render:(text:string,record:any) =>{
                 return(
                    getThaoTac(record,props.lstAction)
@@ -73,12 +94,22 @@ const TableGiayToHoSoDienTus = (props:any) => {
     useEffect(()=>{
         getDataCategories(props.searchData);
     },[])
-    const handleItem = (record: any, action:string = "view")=>{
-        if(record) {
-            setDetailItem(record);
-        }  
-        setModalAction(action);
-        setModalVisible(!modalVisible);
+    const handleItem = async (record: any, action:string = "view")=>{
+        if(action == "delete"){
+            var urlDel = `${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/${record.id}`
+            const resDel = await requestDELETE_ASP(urlDel);
+            if(resDel){
+                toast.success("Xoá thành công");
+                getDataCategories(props.searchData);
+            }
+        
+        }else{
+            if(record) {
+                setDetailItem(record);
+            }  
+            setModalAction(action);
+            setModalVisible(!modalVisible);
+         }
     }
     const getDataCategories = (data:any = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/search`;

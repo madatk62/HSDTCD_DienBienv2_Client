@@ -1,12 +1,15 @@
 import React, {useState,useEffect} from 'react'
 import {shallowEqual, useSelector} from 'react-redux'
+import { Popconfirm } from 'antd';
+import { toast } from 'react-toastify';
 
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
-import { requestPOST_URL } from '../../../../helpers/baseAPI';
+import { requestPOST_URL,requestDELETE_ASP } from '../../../../helpers/baseAPI';
 import ModalLoaiHSDT from './ModalLoaiHSDT';
 import PageHearder from './PageHeader';
 import {RootState} from '@setup/index'
+
 const TableLoaiHSDT = (props:any) => {
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
     const [modalAction, setModalAction] = useState("");
@@ -28,7 +31,7 @@ const TableLoaiHSDT = (props:any) => {
             title: 'Thao tác',
             dataIndex: '',
             key:'action',
-            width:'10%',
+            width:'15%',
             render:(text:string,record:any) =>{
                 return(
                     <div>
@@ -52,6 +55,22 @@ const TableLoaiHSDT = (props:any) => {
                             >
                             <i className='fa fa-edit'></i>
                         </a>
+                        <Popconfirm
+                             title='Bạn có chắc chắn muốn xoá?'
+                             onConfirm={() => {
+                                handleItem(record,"delete");
+                              }}
+                              okText='Xoá'
+                              cancelText='Huỷ'
+                        >
+                            <a
+                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                                data-toggle='m-tooltip'
+                                title='xoá'
+                                >
+                                <i className='fa fa-trash'></i>
+                            </a>    
+                        </Popconfirm>
                     </div>
                 )
             }
@@ -63,12 +82,23 @@ const TableLoaiHSDT = (props:any) => {
     useEffect(()=>{
         getDataCategories(searchValue);
     },[])
-    const handleItem = (record: any, action:string = "view")=>{
-        if(record) {
-            setDetailItem(record);
+    const handleItem = async(record: any, action:string = "view")=>{
+        if(action == "delete"){
+           
+            var urlDel = `${CONFIG.BASE_DBHSDT_URL}/loaihosodientus/${record.id}`
+            const resDel = await requestDELETE_ASP(urlDel);
+            if(resDel){
+                toast.success("Xoá thành công");
+                getDataCategories(searchValue);
+            }
+        
+        }else{
+            if(record) {
+                setDetailItem(record);
+            }
+            setModalAction(action);
+            setModalVisible(!modalVisible);
         }
-        setModalAction(action);
-        setModalVisible(!modalVisible);
     }
     const getDataCategories = (searchValue1:any = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/loaihosodientus/search`;

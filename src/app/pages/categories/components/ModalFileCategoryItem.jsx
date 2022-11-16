@@ -13,7 +13,7 @@ import {
   requestPOST_URL,
   requestPOST_URLDanhMuc,
   requestPOST_DanhMuc,
-  requestPOSTASP_URL,
+  requestPOST_ASP,
 } from '../../../../../src/helpers/baseAPI'
 import {getBase64} from '../../../../../src/helpers/utils'
 const {Option} = Select
@@ -156,7 +156,7 @@ const ModalFileCategoryItem = (props) => {
         console.log(postData)
         console.log('====================================')
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`
-        requestPOSTASP_URL(url, postData)
+        requestPOST_ASP(url, postData)
           .then((res) => {
             // if(res==200){
             //     toast.success("Cập nhật thành công");

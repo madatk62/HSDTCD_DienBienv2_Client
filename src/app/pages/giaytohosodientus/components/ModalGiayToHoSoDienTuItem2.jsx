@@ -14,7 +14,7 @@ import {
   requestPOST_URL,
   requestPOST_URLDanhMuc,
   requestPOST_DanhMuc,
-  requestPOSTASP_URL,
+  requestPOST_ASP,
   requestPUT_URL,
 } from '../../../../helpers/baseAPI'
 import {getBase64} from '../../../../helpers/utils'
@@ -214,7 +214,7 @@ const ModalFileCategoryItem = (props) => {
           nhomGiayToID: formik.values.NhomGiayToID,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`
-        requestPOSTASP_URL(url, postData)
+        requestPOST_ASP(url, postData)
           .then((res) => {
             if (res?.status == 200) {
               toast.success('Cập nhật thành công')

@@ -8,7 +8,7 @@ import {toast} from 'react-toastify'
 import axios from 'axios'
 import {shallowEqual, useSelector} from 'react-redux'
 
-import {requestPOST_URL, requestPUT_URL, requestPOSTASP_URL} from '../../../../helpers/baseAPI'
+import {requestPOST_URL, requestPUT_URL, requestPOST_ASP} from '../../../../helpers/baseAPI'
 import {CONFIG} from '../../../../helpers/config'
 import TableGiayToHoSoDienTus from '../../giaytohosodientus/components/TableGiayToHoSoDienTus'
 // const base_url = "https://danhmuc.hanhchinhcong.net/_layouts/15/TD.CSDLChung.WCF/CSDLChungService.svc";
@@ -141,7 +141,7 @@ const ModalHoSoDienTuItem = (props) => {
         }
 
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/hosodientus`
-        requestPOSTASP_URL(url, postData).then((res) => {
+        requestPOST_ASP(url, postData).then((res) => {
           toast.success('Thêm mới thành công')
           setIsLoading(false)
           setSubmitting(false)
@@ -185,7 +185,9 @@ const ModalHoSoDienTuItem = (props) => {
         backdrop='static'
       >
         <Modal.Header className='bg-primary px-4 py-3'>
-          <Modal.Title className='text-white'>Chi tiết</Modal.Title>
+          <Modal.Title className='text-white'>
+            {props.action == 'view' ? 'Chi tiết' : props.action == 'add' ? 'Thêm mới' : 'Chỉnh sửa'}
+          </Modal.Title>
           <button
             type='button'
             className='btn-close btn-close-white'

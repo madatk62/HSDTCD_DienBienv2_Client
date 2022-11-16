@@ -5,11 +5,7 @@ import * as yup from 'yup'
 import clsx from 'clsx'
 import {shallowEqual, useSelector} from 'react-redux'
 
-import {
-  requestPOSTASP_URL,
-  requestPOST_URL,
-  requestPUT_URL,
-} from '../../../../../src/helpers/baseAPI'
+import {requestPOST_ASP, requestPOST_URL, requestPUT_URL} from '../../../../../src/helpers/baseAPI'
 import {Upload} from 'antd'
 import {toast} from 'react-toastify'
 import {CONFIG} from '../../../../helpers/config'
@@ -64,7 +60,7 @@ const ModaTypelFileCategoryItem = (props) => {
           ten: formik.values.Ten,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/loaihosodientus`
-        requestPOSTASP_URL(url, postData).then((res) => {
+        requestPOST_ASP(url, postData).then((res) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)

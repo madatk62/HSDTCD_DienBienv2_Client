@@ -3,7 +3,7 @@ import { Modal,Button } from 'react-bootstrap-v5';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import clsx from 'clsx';
-import {requestPOSTASP_URL,requestPUT_URL } from '../../../../../src/helpers/baseAPI';
+import {requestPOST_ASP,requestPUT_URL } from '../../../../../src/helpers/baseAPI';
 import { Upload } from 'antd';
 import { toast } from 'react-toastify';
 // const base_url = "https://danhmuc.hanhchinhcong.net/_layouts/15/TD.CSDLChung.WCF/CSDLChungService.svc";
@@ -58,7 +58,7 @@ const ModalGiayToHoSoDienTuItem = (props: any) =>{
                     "dinhKem": "consectetur"
                }
                var url =` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`;
-               requestPOSTASP_URL(url,postData).then(res=>{
+               requestPOST_ASP(url,postData).then(res=>{
                     // if(res==200){
                     //     toast.success("Cập nhật thành công");
                     //     props.reRenderTable()

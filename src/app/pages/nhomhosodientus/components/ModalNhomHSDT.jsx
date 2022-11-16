@@ -7,7 +7,7 @@ import {toast} from 'react-toastify'
 import {Upload} from 'antd'
 import {shallowEqual, useSelector} from 'react-redux'
 
-import {requestPOSTASP_URL, requestPOST_URL, requestPUT_URL} from '../../../../helpers/baseAPI'
+import {requestPOST_ASP, requestPOST_URL, requestPUT_URL} from '../../../../helpers/baseAPI'
 import {CONFIG} from '../../../../helpers/config'
 
 const GiayToSchema = yup.object().shape({
@@ -60,7 +60,7 @@ const ModaTypelFileCategoryItem = (props) => {
           ten: formik.values.Ten,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/Nhomhosodientus`
-        requestPOSTASP_URL(url, postData).then((res) => {
+        requestPOST_ASP(url, postData).then((res) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)

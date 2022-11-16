@@ -7,7 +7,7 @@ import TableGiayToHoSoDienTus from './components/TableGiayToHoSoDienTus';
 import { RootState } from '../../../setup';
 const GiayToHoSoDienTus = (props:any) =>{
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
-    const lstAction = ["btnView", "btnEdit"]
+    const lstAction = ["btnView", "btnEdit", 'btnDel']
     const searchData = { iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,}
     return(<div className='card card-xl-stretch mb-xl-9'>
         <TableGiayToHoSoDienTus lstAction= {lstAction} searchData = {searchData}/>
