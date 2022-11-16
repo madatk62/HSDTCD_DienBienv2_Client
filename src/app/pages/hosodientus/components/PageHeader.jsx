@@ -53,7 +53,9 @@ const PageHearder = (props) => {
     }
     // load ds nhom giay to
     var urlDsNhomHGiayTo = `${CONFIG.BASE_DBHSDT_URL}/nhomhosodientus/search`
-    var searchBodyNhomHGiayTo = {}
+    var searchBodyNhomHGiayTo = {
+      iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+    }
     var dataNhomHGiayTo = await requestPOST_URL(urlDsNhomHGiayTo, searchBodyNhomHGiayTo)
     if (dataNhomHGiayTo?.data) {
       //   setDsOptions({
@@ -65,7 +67,9 @@ const PageHearder = (props) => {
     }
     // load ds loai giay to
     var urlDsLoaiHGiayTo = `${CONFIG.BASE_DBHSDT_URL}/loaihosodientus/search`
-    var searchBodyLoaiHGiayTo = {}
+    var searchBodyLoaiHGiayTo = {
+      iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
+    }
     var dataLoaiHGiayTo = await requestPOST_URL(urlDsLoaiHGiayTo, searchBodyLoaiHGiayTo)
     if (dataLoaiHGiayTo?.data) {
       //   setDsOptions({
@@ -78,7 +82,7 @@ const PageHearder = (props) => {
   }
   const handleTimKiem = () => {
     var formData = form.getFieldValue()
-    console.log(formData)
+
     var searchValue = {
       iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : '',
       maThuTuc: formData.maThuTuc ? formData.maThuTuc : null,

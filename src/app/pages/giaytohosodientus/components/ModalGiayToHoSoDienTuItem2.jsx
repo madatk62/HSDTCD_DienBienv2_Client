@@ -27,7 +27,7 @@ const ModalFileCategoryItem = (props) => {
   var initSelectFormValue = {
     nhomGiayTo: null,
     loaiGiayTo: null,
-    hoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : null,
+    hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null,
     giayToHoSoDienTuID: null,
   }
   var initValue = {
@@ -37,7 +37,7 @@ const ModalFileCategoryItem = (props) => {
     LoaiGiayToID: '',
     NhomGiayToCongDanID: '',
     LoaiGiayToCongDanID: '',
-    HoSoDienTuID: props?.data?.hoSoDienTuId ? props?.data?.hoSoDienTuId : '',
+    HoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : '',
     SoGiayTo: '',
     NguonGui: 'DinhKem',
   }
@@ -435,7 +435,7 @@ const ModalFileCategoryItem = (props) => {
               <label className='form-label fw-bolder text-dark fs-6'>Hồ sơ cá nhân</label>
               <Select
                 // defaultValue='2.000379.000.00.00.H18'
-                disabled={props?.data?.hoSoDienTuId ? true : false}
+                disabled={props?.data?.hoSoDienTuID ? true : false}
                 value={selectedOption.hoSoDienTuID}
                 className='col-xl-12 col-lg-12 col-md-12'
                 allowClear

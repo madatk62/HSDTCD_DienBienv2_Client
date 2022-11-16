@@ -92,6 +92,7 @@ const TableGiayToHoSoDienTus = (props:any) => {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalVisible1, setModalVisible1] = useState(false);
     useEffect(()=>{
+       
         getDataCategories(props.searchData);
     },[])
     const handleItem = async (record: any, action:string = "view")=>{
@@ -103,10 +104,18 @@ const TableGiayToHoSoDienTus = (props:any) => {
                 getDataCategories(props.searchData);
             }
         
-        }else{
-            if(record) {
-                setDetailItem(record);
-            }  
+        }else
+        {   if(action == "add"){
+                setDetailItem({
+                    hoSoDienTuID:    props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+                });
+            }else
+            if(action == "edit"){
+                if(record) {
+                    setDetailItem(record);
+                }  
+            }
+            
             setModalAction(action);
             setModalVisible(!modalVisible);
          }
@@ -128,6 +137,9 @@ const TableGiayToHoSoDienTus = (props:any) => {
                 handleItem(null,"add")}}     
             onClickThemMoiTuDs={()=>{
                 setModalVisible1(true)
+                setDetailItem({
+                    hoSoDienTuID:    props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null
+                });
                 }}  
 
                 />
@@ -143,8 +155,8 @@ const TableGiayToHoSoDienTus = (props:any) => {
             </div>
         </div>
        
-        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={{...detailItem,hoSoDienTuID: props?.data?.hoSoDienTuID?props?.data?.hoSoDienTuID:null}} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}
-        {modalVisible1 && <ModalGiayToHoSoDienTuItem2 modalVisible= {modalVisible1} setModalVisible= {setModalVisible1} data={{...detailItem,hoSoDienTuID: props?.data?.hoSoDienTuID?props?.data?.hoSoDienTuID:null}} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}        
+        {modalVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}
+        {modalVisible1 && <ModalGiayToHoSoDienTuItem2 modalVisible= {modalVisible1} setModalVisible= {setModalVisible1} data={detailItem} reRenderTable = {getDataCategories} action={modalAction} searchData= {props.searchData}/>}        
      
     </div>)
 }

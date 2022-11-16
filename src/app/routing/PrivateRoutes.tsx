@@ -33,7 +33,7 @@ export function PrivateRoutes() {
         <Route path='/ho-so-dien-tu' component={HoSoDienTu} />
         <Route path='/giay-to-ho-so-dien-tu' component={GiayToHoSoDienTus} />
         <Redirect from='/auth' to='/categories' />
-        <Redirect exact from='/' to='/dashboard' />
+        <Redirect exact from='/' to='/categories' />
         <Redirect to='error/404' />
       </Switch>
     </Suspense>

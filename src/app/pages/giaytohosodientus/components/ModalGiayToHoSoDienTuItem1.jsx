@@ -23,6 +23,9 @@ const {Dragger} = Upload
 const maxUploadSize = 3000000
 
 const ModalFileCategoryItem1 = (props) => {
+  console.log('====================================')
+  console.log(props)
+  console.log('====================================')
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initSelectFormValue = {
     nhomGiayTo: props?.data?.nhomGiayToID ? parseInt(props?.data?.nhomGiayToID) : null,

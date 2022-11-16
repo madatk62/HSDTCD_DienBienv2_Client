@@ -13,7 +13,7 @@ export const CONFIG = {
   :'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOiJkYjYyOTNmYi1mNGQzLTQ3YjUtOGViYi02NGEzMjAyODc2ZmQiLCJzdWIiOiJyb290LmFkbWluIiwiZW1haWwiOiJhZG1pbkByb290LmNvbSIsImZ1bGxOYW1lIjoiQWRtaW4iLCJpcEFkZHJlc3MiOiIxMjcuMC4wLjEiLCJ0ZW5hbnQiOiJyb290IiwiZXhwIjoxNzAwMDQ0Njk5fQ.fT-tLlmvxqKBwM-_SoRhR0XLHVvCgdP5txPzFpe4kh0',
   PATH_APP: "paht",
   BASE_HSDT_URL : "https://api.dienbien.gov.vn/apiSoHoa",
-  BASE_DBHSDT_URL : "https://localhost:5001/api/v1",
+  BASE_DBHSDT_URL : (process.env.NODE_ENV === 'production')?"/api/v1":"https://localhost:5001/api/v1",
   URL_MotCuaDienBien: "https://api.dienbien.gov.vn/KetNoiMotCuaQuocGia",
   Bearer_Token_MotCuaDienBien:"70957605-a469-31ff-ae92-a2b1cee5a264"
 }
