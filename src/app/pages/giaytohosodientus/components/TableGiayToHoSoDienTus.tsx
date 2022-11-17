@@ -20,6 +20,13 @@ const TableGiayToHoSoDienTus = (props:any) => {
                                     data-toggle='m-tooltip'
                                     title='Xem chi tiết'
                                     onClick={() => {
+                                        if(record.giayToCaNhanID){
+                                            setModalVisible1(true);
+                                            setModalAction('view')
+                                            setDetailItem(record);
+                                        }else {
+                                            handleItem(record,"view");
+                                        }
                                         handleItem(record,"view");
                                     }}
                                 >
@@ -32,7 +39,13 @@ const TableGiayToHoSoDienTus = (props:any) => {
                             data-toggle='m-tooltip'
                             title='Sửa'
                             onClick={() => {
-                                handleItem(record,"edit");
+                                if(record.giayToCaNhanID){
+                                    setModalVisible1(true);
+                                    setModalAction('edit')
+                                    setDetailItem(record);
+                                }else {
+                                    handleItem(record,"edit");
+                                }
                             }}
                             >
                             <i className='fa fa-edit'></i>
@@ -125,7 +138,7 @@ const TableGiayToHoSoDienTus = (props:any) => {
                 });
             }else
             
-            if(action == "edit"){
+            if(action == "edit" || action == 'view'){
                 if(record) {
                     setDetailItem(record);
                 }  

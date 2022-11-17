@@ -18,6 +18,7 @@ import {
   requestPUT_URL,
 } from '../../../../helpers/baseAPI'
 import {getBase64} from '../../../../helpers/utils'
+import internal from 'stream'
 const {Option} = Select
 const {Dragger} = Upload
 const maxUploadSize = 3000000
@@ -25,32 +26,28 @@ const maxUploadSize = 3000000
 const ModalFileCategoryItem = (props) => {
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initSelectFormValue = {
-    nhomGiayTo: null,
-    loaiGiayTo: null,
+    nhomGiayTo: props?.data?.nhomGiayToID ? parseInt(props?.data?.nhomGiayToID) : null,
+    loaiGiayTo: props?.data?.loaiGiayToID ? parseInt(props?.data?.loaiGiayToID) : null,
     hoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : null,
-    giayToHoSoDienTuID: null,
+    giayToHoSoDienTuID: props?.data?.giayToCaNhanID ? parseInt(props?.data?.giayToCaNhanID) : null,
   }
+
   var initValue = {
     MaGiayTo: '',
     TenGiayTo: '',
     UrlFile: '',
-    LoaiGiayToID: '',
     NhomGiayToCongDanID: '',
     LoaiGiayToCongDanID: '',
+    TenNhomGiayTo: '',
+    TenLoaiGiayTo: '',
     HoSoDienTuID: props?.data?.hoSoDienTuID ? props?.data?.hoSoDienTuID : '',
     SoGiayTo: '',
+    GiayToCaNhanID: props?.data?.giayToCaNhanID ? props?.data?.giayToCaNhanID : null,
     NguonGui: 'DinhKem',
   }
   const GiayToSchema = yup.object().shape({
     MaGiayTo: yup.string().trim().required('Mã giấy tờ là bắt buộc'),
     TenGiayTo: yup.string().trim().required('Tên giấy tờ là bắt buộc'),
-    UrlFile: yup.string(),
-    HoSoDienTuID: yup.string(),
-    SoGiayTo: yup.number().typeError('Số giấy tờ không hợp lệ'),
-    LoaiGiayToID: yup.string(),
-    NhomGiayToCongDanID: yup.string(),
-    LoaiGiayToCongDanID: yup.string(),
-    NguonGui: yup.string(),
   })
   const [isLoading, setIsLoading] = useState(false)
   const [fileUpload, setFileUpload] = useState([])
@@ -129,9 +126,10 @@ const ModalFileCategoryItem = (props) => {
           setSelectedItemGiayToHSDT(item)
         }
       })
-    } else {
-      setSelectedItemGiayToHSDT(initValue)
     }
+    //  else {
+    //   setSelectedItemGiayToHSDT(initValue)
+    // }
   }
   const handleSubmitForm = async () => {
     var url = await getUrlDinhKem(fileUpload)
@@ -183,10 +181,15 @@ const ModalFileCategoryItem = (props) => {
           iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           dinhKem: formik.values.UrlFile,
           soGiayTo: formik.values.SoGiayTo,
-          loaiGiayToID: formik.values.LoaiGiayToID,
+          loaiGiayToID: formik.values.LoaiGiayToCongDanID
+            ? formik.values.LoaiGiayToCongDanID.toString()
+            : null,
           tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
           tenNhomGiayTo: formik.values.TenNhomGiayTo,
-          nhomGiayToID: formik.values.NhomGiayToID,
+          nhomGiayToID: formik.values.NhomGiayToCongDanID
+            ? formik.values.NhomGiayToCongDanID.toString()
+            : null,
+          giayToCaNhanID: formik.values.GiayToCaNhanID,
         }
         console.log(putData)
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus/${props?.data?.id}`
@@ -208,10 +211,11 @@ const ModalFileCategoryItem = (props) => {
           iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,
           dinhKem: formik.values.UrlFile,
           soGiayTo: formik.values.SoGiayTo,
-          loaiGiayToID: formik.values.LoaiGiayToID,
+          loaiGiayToID: formik.values.LoaiGiayToCongDanID,
           tenLoaiGiayTo: formik.values.TenLoaiGiayTo,
           tenNhomGiayTo: formik.values.TenNhomGiayTo,
-          nhomGiayToID: formik.values.NhomGiayToID,
+          nhomGiayToID: formik.values.NhomGiayToCongDanID,
+          giayToCaNhanID: formik.values.GiayToCaNhanID,
         }
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/giaytohosodientus`
         requestPOST_ASP(url, postData)
@@ -238,11 +242,16 @@ const ModalFileCategoryItem = (props) => {
     },
   })
   // init file Upload
-  const fillFormDinhKem = async () => {
+  const fillFormDinhKem = async (strDinhKem) => {
+    console.log('====================================')
+    console.log(strDinhKem)
+    console.log('====================================')
     var arrFile = []
-    if (props.data.UrlFile) {
-      var arrUrls = props.data.UrlFile.split('##')
-
+    if (strDinhKem) {
+      var arrUrls = strDinhKem.split('##')
+      console.log('====================================')
+      console.log(arrUrls)
+      console.log('====================================')
       arrUrls.map((url, index) => {
         var tmp = urlStringToFileList(url, index)
         arrFile.push(tmp)
@@ -283,33 +292,53 @@ const ModalFileCategoryItem = (props) => {
   }
   useEffect(() => {
     LoadFormDaTa()
-    formik.setValues(props.data)
-    fillFormDinhKem()
-  }, [])
-  useEffect(() => {
+    //formik.setValues(props.data)
     formik.setValues({
       ...formik.values,
-      MaGiayTo: selectedItemGiayToHSDT.MaGiayTo,
-      TenGiayTo: selectedItemGiayToHSDT.TenGiayTo,
-      UrlFile: selectedItemGiayToHSDT.UrlFile,
-      SoGiayTo: selectedItemGiayToHSDT.SoGiayTo,
-      LoaiGiayToCongDanID: selectedItemGiayToHSDT.LoaiGiayToCongDanID,
-      NhomGiayToCongDanID: selectedItemGiayToHSDT.NhomGiayToCongDanID,
+      MaGiayTo: props.data.maGiayTo,
+      TenGiayTo: props.data.tenGiayTo,
+      UrlFile: props.data.dinhKem,
+      SoGiayTo: props.data.soGiayTo,
+      LoaiGiayToCongDanID: props.data.loaiGiayToID,
+      NhomGiayToCongDanID: props.data.nhomGiayToID,
+      TenLoaiGiayTo: props.data.tenLoaiGiayTo,
+      TenNhomGiayTo: props.data.tenNhomGiayTo,
+      GiayToCaNhanID: props.data.giayToCaNhanID,
     })
-    setSelectedOption({
-      ...selectedOption,
-      LoaiGiayToCongDanID: selectedItemGiayToHSDT.LoaiGiayToCongDanID,
-      NhomGiayToCongDanID: selectedItemGiayToHSDT.NhomGiayToCongDanID,
-    })
-    var arrFile = []
-    if (selectedItemGiayToHSDT.UrlFile) {
-      var arrUrls = selectedItemGiayToHSDT.UrlFile.split('##')
-
-      arrUrls.map((url, index) => {
-        var tmp = urlStringToFileList(url, index)
-        arrFile.push(tmp)
+    if (props?.data?.giayToCaNhanID) {
+      getDetailGiayToHSDT(parseInt(props?.data?.giayToCaNhanID))
+    }
+    console.log(props?.data)
+    if (props?.data?.dinhKem) {
+      fillFormDinhKem(props?.data?.dinhKem)
+    }
+  }, [])
+  useEffect(() => {
+    if (selectedItemGiayToHSDT?.TenGiayTo) {
+      formik.setValues({
+        ...formik.values,
+        MaGiayTo: selectedItemGiayToHSDT.MaGiayTo,
+        TenGiayTo: selectedItemGiayToHSDT.TenGiayTo,
+        UrlFile: selectedItemGiayToHSDT.UrlFile,
+        SoGiayTo: selectedItemGiayToHSDT.SoGiayTo,
+        LoaiGiayToCongDanID: selectedItemGiayToHSDT.LoaiGiayToCongDanID,
+        NhomGiayToCongDanID: selectedItemGiayToHSDT.NhomGiayToCongDanID,
       })
-      setFileUpload(arrFile)
+      setSelectedOption({
+        ...selectedOption,
+        LoaiGiayToCongDanID: selectedItemGiayToHSDT.LoaiGiayToCongDanID,
+        NhomGiayToCongDanID: selectedItemGiayToHSDT.NhomGiayToCongDanID,
+      })
+      var arrFile = []
+      if (selectedItemGiayToHSDT.UrlFile) {
+        var arrUrls = selectedItemGiayToHSDT.UrlFile.split('##')
+
+        arrUrls.map((url, index) => {
+          var tmp = urlStringToFileList(url, index)
+          arrFile.push(tmp)
+        })
+        setFileUpload(arrFile)
+      }
     }
   }, [selectedItemGiayToHSDT])
 
@@ -356,6 +385,7 @@ const ModalFileCategoryItem = (props) => {
                 }
                 onChange={(val, option) => {
                   setSelectedOption({...selectedOption, giayToHoSoDienTuID: val})
+                  formik.values.GiayToCaNhanID = val.toString()
                   getDetailGiayToHSDT(val)
                 }}
               >
@@ -492,6 +522,7 @@ const ModalFileCategoryItem = (props) => {
                 }
                 onChange={(val, option) => {
                   formik.values.LoaiGiayToCongDanID = val
+                  formik.values.TenLoaiGiayTo = option?.children ? option?.children : null
                   setSelectedOption({...selectedOption, loaiGiayTo: val})
                 }}
               >
@@ -533,10 +564,11 @@ const ModalFileCategoryItem = (props) => {
                 filterOption={(input, option) =>
                   option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
                 }
-                onChange={(val, prop) => {
+                onChange={(val, option) => {
                   formik.values.NhomGiayToCongDanID = val
+                  formik.values.TenNhomGiayTo = option?.children ? option?.children : null
                   // formik.values.NhomGiayToCongDanID
-                  setSelectedOption({...selectedOption, loaiGiayTo: val})
+                  setSelectedOption({...selectedOption, nhomGiayTo: val})
                 }}
               >
                 {dsNhomHGiayTo.map((item) => {
@@ -615,7 +647,7 @@ const ModalFileCategoryItem = (props) => {
               className='btn-sm btn-primary rounded-1 p-2  ms-2'
               onClick={handleSubmitForm}
               type='submit'
-              disabled={formik.isSubmitting || formik.isValid}
+              disabled={formik.isSubmitting || !formik.isValid}
               hidden={formik.values.NguonGui == 'DVC' ? true : false}
             >
               {!isLoading ? (

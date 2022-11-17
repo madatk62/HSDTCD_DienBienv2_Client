@@ -9,12 +9,65 @@ import ModalHoSoDienTuItem from './ModalHoSoDienTuItem';
 import PageHearder from './PageHeader';
 import { RootState } from '@setup/index';
 import { toast } from 'react-toastify';
-const TableHoSoDienTus = (props:any) => {
+const TableHoSoDienTus1 = (props:any) => {
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
     const [modalAction, setModalAction] = useState("");
     const [searchValue, setSearchValue] = useState(
         {iDCongDan: userInfor?.technicalId? userInfor?.technicalId: ""}
     );
+    const getThaoTac = (record:any, lstAction: any = [])=>{
+        return(
+            <div>
+                {lstAction.map((actionItem:any)=>{
+                    if(actionItem== "btnView"){
+                        return (<a
+                                    className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                                    data-toggle='m-tooltip'
+                                    title='Xem chi tiết'
+                                    onClick={() => {
+                                        handleItem(record,"view");
+                                    }}
+                                >
+                                <i className='fa fa-eye'></i>
+                            </a>)
+                    } else
+                    if(actionItem== "btnEdit"){
+                        return ( <a
+                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                            data-toggle='m-tooltip'
+                            title='Sửa'
+                            onClick={() => {
+                                handleItem(record,"edit");
+                            }}
+                            >
+                            <i className='fa fa-edit'></i>
+                        </a>)
+                    }else
+                    if(actionItem== "btnDel"){
+                        return ( <Popconfirm
+                            title='Bạn có chắc chắn muốn xoá?'
+                            onConfirm={() => {
+                               handleItem(record,"delete");
+                             }}
+                             okText='Xoá'
+                             cancelText='Huỷ'
+                       >
+                           <a
+                               className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
+                               data-toggle='m-tooltip'
+                               title='xoá'
+                               >
+                               <i className='fa fa-trash'></i>
+                           </a>    
+                       </Popconfirm>)
+                    }
+                })}
+              
+                
+               
+            </div>
+        )
+    }
     const column = [
         // {
         //     title: 'Mã hồ sơ',
@@ -38,45 +91,7 @@ const TableHoSoDienTus = (props:any) => {
             width:'15%',
             render:(text:string,record:any) =>{
                 return(
-                    <div>
-                        <a
-                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
-                            data-toggle='m-tooltip'
-                            title='Xem chi tiết'
-                            onClick={() => {
-                                handleItem(record,"view");
-                            }}
-                            >
-                            <i className='fa fa-eye'></i>
-                        </a>
-                        <a
-                            className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
-                            data-toggle='m-tooltip'
-                            title='Sửa'
-                            onClick={() => {
-                                handleItem(record,"edit");
-                            }}
-                            >
-                            <i className='fa fa-edit'></i>
-                        </a>
-                        <Popconfirm
-                             title='Bạn có chắc chắn muốn xoá?'
-                             onConfirm={() => {
-                                handleItem(record,"delete");
-                              }}
-                              okText='Xoá'
-                              cancelText='Huỷ'
-                        >
-                            <a
-                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1 mb-1'
-                                data-toggle='m-tooltip'
-                                title='xoá'
-                                >
-                                <i className='fa fa-trash'></i>
-                            </a>    
-                        </Popconfirm>
-                        
-                    </div>
+                    getThaoTac(record,props.lstAction)
                 )
             }
         }
@@ -116,8 +131,6 @@ const TableHoSoDienTus = (props:any) => {
     }
     const getDataCategories = (searchData:any  = {})=>{
         var url = `${CONFIG.BASE_DBHSDT_URL}/hosodientus/search`;
-        var Data ={
-         }
         requestPOST_URL(url,searchData).then(res=>{
             if(res?.data){
                 setDataTable(res?.data);
@@ -145,4 +158,4 @@ const TableHoSoDienTus = (props:any) => {
     </div>)
 }
 
-export default TableHoSoDienTus;
+export default TableHoSoDienTus1;

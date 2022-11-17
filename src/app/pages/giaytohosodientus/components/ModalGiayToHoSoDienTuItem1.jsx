@@ -23,9 +23,6 @@ const {Dragger} = Upload
 const maxUploadSize = 3000000
 
 const ModalFileCategoryItem1 = (props) => {
-  console.log('====================================')
-  console.log(props)
-  console.log('====================================')
   const userInfor = useSelector((auth) => auth.global.userInfo, shallowEqual)
   var initSelectFormValue = {
     nhomGiayTo: props?.data?.nhomGiayToID ? parseInt(props?.data?.nhomGiayToID) : null,
@@ -209,10 +206,10 @@ const ModalFileCategoryItem1 = (props) => {
     },
   })
   // init file Upload
-  const fillFormDinhKem = async () => {
+  const fillFormDinhKem = async (strDinhKem) => {
     var arrFile = []
-    if (props.data.UrlFile) {
-      var arrUrls = props.data.UrlFile.split('##')
+    if (strDinhKem) {
+      var arrUrls = strDinhKem.split('##')
 
       arrUrls.map((url, index) => {
         var tmp = urlStringToFileList(url, index)
@@ -261,7 +258,9 @@ const ModalFileCategoryItem1 = (props) => {
       MaGiayTo: props?.data?.maGiayTo,
       UrlFile: props?.data?.dinhKem,
     })
-    fillFormDinhKem()
+    if (props?.data?.dinhKem) {
+      fillFormDinhKem(props?.data?.dinhKem)
+    }
   }, [])
   return (
     <form

@@ -28,13 +28,17 @@ const ModalHoSoDienTuItem = (props) => {
     thuTuc: props?.data?.maThuTuc ? props?.data?.maThuTuc : null,
     nhomHoSo: props?.data?.maNhomHoSo ? props?.data?.maNhomHoSo : null,
     loaiHoSo: props?.data?.maLoaiHoSo ? props?.data?.maLoaiHoSo : null,
+    linhVuc: props?.data?.maLinhVuc ? props?.data?.maLinhVuc : null,
   }
 
   var initValue = {
+    id: '',
     maHoSo: '',
     tenHoSo: '',
     tenThuTuc: '',
     maThuTuc: '',
+    tenLinhVuc: '',
+    maLinhVuc: '',
     tenNhomHoSo: '',
     maNhomHoSo: '',
     tenLoaiHoSo: '',
@@ -47,6 +51,8 @@ const ModalHoSoDienTuItem = (props) => {
   // init formdata
   const [dsNhomGiayTo, setDsNhomGiayTo] = useState([])
   const [dsLoaiGiayTo, setDsLoaiGiayTo] = useState([])
+  const [dsThuTuc, setDsThuTuc] = useState([])
+  const [selectedLinhVuc, setSelectedLinhVuc] = useState({})
   const [selectedOption, setSelectedOption] = useState(initSelectFormValue)
   // LoadFormData
   const LoadFormDaTa = async () => {
@@ -89,9 +95,59 @@ const ModalHoSoDienTuItem = (props) => {
         setDsThuTuc(result)
       }
     }
+    // //form thu tuc
+    // var urlgetLinhVuc = `${CONFIG.URL_MotCuaDienBien}/LayDanhMucLinhVuc`
+    // const resLinhVuc = await axios({
+    //   method: 'Get',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     Authorization: `Bearer ${CONFIG.Bearer_Token_MotCuaDienBien}`,
+    //     //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+    //     // "Access-Control-Allow-Origin":"*",
+    //     // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+    //   },
+    //   url: urlgetLinhVuc,
+    // })
+    // if (resLinhVuc.status == 200) {
+    //   var strResult = resLinhVuc.data.message
+    //   var resData = JSON.parse(strResult)
+    //   var result = resData?.result
+    //   if (result) {
+    //     setDsLinhVuc(result)
+    //   }
+    // }
+    //
+    // getLinhVucByMaTTHC('2.002042.000.00.00.H56')
   }
-
-  const [dsThuTuc, setDsThuTuc] = useState([])
+  const getLinhVucByMaTTHC = async (maTTHC) => {
+    var urlgetLinhVuc = `${CONFIG.URL_MotCuaDienBien}/LayThuTuc?maTTHC=${maTTHC}`
+    const resLinhVuc = await axios({
+      method: 'Get',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${CONFIG.Bearer_Token_MotCuaDienBien}`,
+        //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
+        // "Access-Control-Allow-Origin":"*",
+        // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
+      },
+      url: urlgetLinhVuc,
+    })
+    if (resLinhVuc.status == 200) {
+      var strResult = resLinhVuc.data.message
+      var resData = JSON.parse(strResult)
+      var result = resData?.result
+      if (result) {
+        console.log(formik.values)
+        setSelectedOption({...selectedOption, linhVuc: result[0]?.LINHVUCTHUCHIEN[0]?.MALINHVUC})
+        formik.values.maLinhVuc = result[0]?.LINHVUCTHUCHIEN[0]?.MALINHVUC
+        formik.values.tenLinhVuc = result[0]?.LINHVUCTHUCHIEN[0]?.TENLINHVUC
+        setSelectedLinhVuc({
+          maLinhVuc: result[0]?.LINHVUCTHUCHIEN[0]?.MALINHVUC,
+          tenLinhVuc: result[0]?.LINHVUCTHUCHIEN[0]?.TENLINHVUC,
+        })
+      }
+    }
+  }
   const handleSubmitForm = () => {
     if (hoSoDienTuID) {
       props.setModalVisible(false)
@@ -107,6 +163,8 @@ const ModalHoSoDienTuItem = (props) => {
       tenHoSo: formik.values.tenHoSo ? formik.values.tenHoSo : '',
       maThuTuc: formik.values.maThuTuc ? formik.values.maThuTuc : '',
       tenThuTuc: formik.values.tenThuTuc ? formik.values.tenThuTuc : '',
+      maLinhVuc: formik.values.maLinhVuc ? formik.values.maLinhVuc : '',
+      tenLinhVuc: formik.values.tenLinhVuc ? formik.values.tenLinhVuc : '',
       tenNhomHoSo: formik.values.tenNhomHoSo ? formik.values.tenNhomHoSo : '',
       maNhomHoSo: formik.values.maNhomHoSo ? formik.values.maNhomHoSo : '',
       tenLoaiHoSo: formik.values.tenLoaiHoSo ? formik.values.tenLoaiHoSo : '',
@@ -122,7 +180,7 @@ const ModalHoSoDienTuItem = (props) => {
         setHoSoDienTuID(res?.data?.data)
         setIsSubmited(true)
       }
-      formik.setIsLoading(false)
+      // formik.setIsLoading(false)
       formik.setSubmitting(false)
       props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
     })
@@ -147,6 +205,8 @@ const ModalHoSoDienTuItem = (props) => {
           tenHoSo: formik.values.tenHoSo ? formik.values.tenHoSo : '',
           maThuTuc: formik.values.maThuTuc ? formik.values.maThuTuc : '',
           tenThuTuc: formik.values.tenThuTuc ? formik.values.tenThuTuc : '',
+          maLinhVuc: formik.values.maLinhVuc ? formik.values.maLinhVuc : '',
+          tenLinhVuc: formik.values.tenLinhVuc ? formik.values.tenLinhVuc : '',
           tenNhomHoSo: formik.values.tenNhomHoSo ? formik.values.tenNhomHoSo : '',
           maNhomHoSo: formik.values.maNhomHoSo ? formik.values.maNhomHoSo : '',
           tenLoaiHoSo: formik.values.tenLoaiHoSo ? formik.values.tenLoaiHoSo : '',
@@ -160,6 +220,7 @@ const ModalHoSoDienTuItem = (props) => {
           toast.success('Cập nhật thành công')
           setIsLoading(false)
           setSubmitting(false)
+          setIsSubmited(true)
           props.setModalVisible(false)
           props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
         })
@@ -169,6 +230,8 @@ const ModalHoSoDienTuItem = (props) => {
           tenHoSo: formik.values.tenHoSo ? formik.values.tenHoSo : '',
           maThuTuc: formik.values.maThuTuc ? formik.values.maThuTuc : '',
           tenThuTuc: formik.values.tenThuTuc ? formik.values.tenThuTuc : '',
+          maLinhVuc: formik.values.maLinhVuc ? formik.values.maLinhVuc : '',
+          tenLinhVuc: formik.values.tenLinhVuc ? formik.values.tenLinhVuc : '',
           tenNhomHoSo: formik.values.tenNhomHoSo ? formik.values.tenNhomHoSo : '',
           maNhomHoSo: formik.values.maNhomHoSo ? formik.values.maNhomHoSo : '',
           tenLoaiHoSo: formik.values.tenLoaiHoSo ? formik.values.tenLoaiHoSo : '',
@@ -176,12 +239,15 @@ const ModalHoSoDienTuItem = (props) => {
           idCongDan: userInfor.technicalId ? userInfor.technicalId : '',
           taiKhoanTao: userInfor.userName ? userInfor.userName : '',
         }
-
+        console.log('====================================')
+        console.log(postData)
+        console.log('====================================')
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/hosodientus`
         requestPOST_ASP(url, postData).then((res) => {
           toast.success('Thêm mới thành công')
           setIsLoading(false)
           setSubmitting(false)
+          setIsSubmited(true)
           props.setModalVisible(false)
           props.reRenderTable({iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : ''})
         })
@@ -198,12 +264,19 @@ const ModalHoSoDienTuItem = (props) => {
     },
   })
   useEffect(() => {
+    console.log(props)
     if (props.action == 'view') {
       setIsDisableInput(true)
+      setIsSubmited(true)
+    } else if (props.action == 'edit') {
+      setIsSubmited(true)
     }
     formik.setValues(props.data)
     LoadFormDaTa()
   }, [])
+  useEffect(() => {
+    getLinhVucByMaTTHC(selectedOption.thuTuc)
+  }, [selectedOption.thuTuc])
   return (
     <form
       className='form w-100 fv-plugins-bootstrap5 fv-plugins-framework'
@@ -310,6 +383,7 @@ const ModalHoSoDienTuItem = (props) => {
                 onChange={(val, text) => {
                   formik.values.maThuTuc = val
                   formik.values.tenThuTuc = text?.children
+                  // formik.setValues({...formik.values, maThuTuc: val, tenThuTuc: text?.children})
                   setSelectedOption({...selectedOption, thuTuc: val})
                 }}
               >
@@ -327,6 +401,48 @@ const ModalHoSoDienTuItem = (props) => {
                     </Option>
                   )
                 })}
+              </Select>
+            </div>
+          </div>
+          <div className='row fv-row mb-7'>
+            <div className='col-xl-12 col-lg-12 col-md-12'>
+              <label className='form-label fw-bolder text-dark fs-6 required'>Lĩnh vực</label>
+              <Select
+                // defaultValue='2.000379.000.00.00.H18'
+
+                value={selectedOption.linhVuc}
+                className='col-xl-12 col-lg-12 col-md-12'
+                allowClear
+                showSearch
+                disabled={false}
+                placeholder='Lĩnh vực'
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
+                }
+                onChange={(val, text) => {
+                  // formik.values.maLinhVuc = val
+                  // formik.values.tenLinhVuc = text?.children
+                  formik.setValues({...formik.values, maLinhVuc: val, tenLinhVuc: text?.children})
+                  setSelectedOption({...selectedOption, linhVuc: val})
+                }}
+              >
+                {/* {dsLinhVuc.map((item) => {
+                  // if (item.MATTHC == formik.values.maLinhVuc && formik.values.maLinhVuc) {
+                  //   return (
+                  //     <Option key={item.MATTHC} value={item.MATTHC} selected>
+                  //       {item.TENTTHC}
+                  //     </Option>
+                  //   )
+                  // }
+                  return (
+                    <Option key={item.MALINHVUC} value={item.MALINHVUC}>
+                      {item.TENLINHVUC}
+                    </Option>
+                  )
+                })} */}
+                <Option key={selectedLinhVuc.maLinhVuc} value={selectedLinhVuc.maLinhVuc}>
+                  {selectedLinhVuc.tenLinhVuc}
+                </Option>
               </Select>
             </div>
           </div>
@@ -412,22 +528,24 @@ const ModalHoSoDienTuItem = (props) => {
               </Select>
             </div>
           </div>
-          <div className='row fv-row mb-7'>
-            <div className='col-xl-12 col-lg-12 col-md-12 d-flex'>
-              <Button
-                className='btn btn-primary btn-sm m-btn m-btn--icon py-2 me-2'
-                type='button'
-                disabled={formik.isSubmitting || !formik.isValid || isSubmited}
-                onClick={handleLuuHoSo}
-              >
-                <span>
-                  <i className='fas fa-save'></i>
-                  <span className=''>Lưu hồ sơ điện tử</span>
-                </span>
-              </Button>
+          {props.action != 'edit' && props.action != 'view' && (
+            <div className='row fv-row mb-7'>
+              <div className='col-xl-12 col-lg-12 col-md-12 d-flex'>
+                <Button
+                  className='btn btn-primary btn-sm m-btn m-btn--icon py-2 me-2'
+                  type='button'
+                  disabled={formik.isSubmitting || !formik.isValid || isSubmited}
+                  onClick={handleLuuHoSo}
+                >
+                  <span>
+                    <i className='fas fa-save'></i>
+                    <span className=''>Lưu hồ sơ điện tử</span>
+                  </span>
+                </Button>
+              </div>
+              <span className='bullet bullet-horizontal flex-grow-1 bg-secondary h-1px mt-5'></span>
             </div>
-            <span className='bullet bullet-horizontal flex-grow-1 bg-secondary h-1px mt-5'></span>
-          </div>
+          )}
           <div className=''>
             {props.action == 'view' ? (
               <TableGiayToHoSoDienTus
