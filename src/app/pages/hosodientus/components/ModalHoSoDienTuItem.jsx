@@ -239,9 +239,6 @@ const ModalHoSoDienTuItem = (props) => {
           idCongDan: userInfor.technicalId ? userInfor.technicalId : '',
           taiKhoanTao: userInfor.userName ? userInfor.userName : '',
         }
-        console.log('====================================')
-        console.log(postData)
-        console.log('====================================')
         var url = ` ${CONFIG.BASE_DBHSDT_URL}/hosodientus`
         requestPOST_ASP(url, postData).then((res) => {
           toast.success('Thêm mới thành công')
@@ -549,7 +546,7 @@ const ModalHoSoDienTuItem = (props) => {
           <div className=''>
             {props.action == 'view' ? (
               <TableGiayToHoSoDienTus
-                lstAction={[]}
+                lstAction={['btnView']}
                 searchData={searchGiayToHSDTData}
                 data={{hoSoDienTuID: props?.data?.id}}
                 action='view'

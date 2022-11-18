@@ -14,7 +14,7 @@ const urlStringToFileList = (str, index) => {
   var res = {
     uid: index,
     name: fileName,
-    url: `${CONFIG.BASE_HSDT_URL + str}`,
+    url: `https://hosodientu.dienbien.gov.vn/${str}`,
     path: str,
   }
   return res

@@ -14,7 +14,6 @@ const PageHearder = (props) => {
     maThuTuc: null,
     maNhomHoSo: null,
     maLoaiHoSo: null,
-    maLinhVuc: null,
   }
   const FormItem = Form.Item
   const [form] = Form.useForm()
@@ -28,7 +27,6 @@ const PageHearder = (props) => {
   //     dsNhomHS: [],
   //   })
   const [dsThuTuc, setDsThuTuc] = useState([])
-  const [dsLinhVuc, setDsLinhVuc] = useState([])
   const [dsLoaiHS, setDsLoaiHS] = useState([])
   const [dsNhomHS, setDsNhomHS] = useState([])
   useEffect(() => {
@@ -84,27 +82,6 @@ const PageHearder = (props) => {
       //   })
       setDsLoaiHS(dataLoaiHGiayTo?.data)
     }
-    // Danh sach linh vuc
-    var urlgetLinhVuc = `${CONFIG.URL_MotCuaDienBien}/LayDanhMucLinhVuc`
-    const resLinhVuc = await axios({
-      method: 'Get',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${CONFIG.Bearer_Token_MotCuaDienBien}`,
-        //   Authorization: `Bearer ${CONFIG.GETWAY_TOKEN}`,
-        // "Access-Control-Allow-Origin":"*",
-        // 'Access-Control-Allow-Methods':'GET,PUT,POST,DELETE,PATCH,OPTIONS'
-      },
-      url: urlgetLinhVuc,
-    })
-    if (resLinhVuc.status == 200) {
-      var strResult = resLinhVuc.data.message
-      var resData = JSON.parse(strResult)
-      var result = resData?.result
-      if (result) {
-        setDsLinhVuc(result)
-      }
-    }
   }
   const handleTimKiem = () => {
     var formData = form.getFieldValue()
@@ -112,7 +89,6 @@ const PageHearder = (props) => {
     var searchValue = {
       iDCongDan: userInfor?.technicalId ? userInfor?.technicalId : '',
       maThuTuc: formData.maThuTuc ? formData.maThuTuc : null,
-      maLinhVuc: formData.maLinhVuc ? formData.maLinhVuc : null,
       maNhomHoSo: formData.maNhomHoSo ? formData.maNhomHoSo : null,
       maLoaiHoSo: formData.maLoaiHoSo ? formData.maLoaiHoSo : null,
       tuNgay: tuNgay,
@@ -134,28 +110,20 @@ const PageHearder = (props) => {
           >
             <span>
               <i className='fas fa-search'></i>
-              <span className=''>
-                {' '}
-                {props?.from == 'ThongKe'
-                  ? 'Thống kê'
-                  : props?.from == 'TraCuu'
-                  ? 'Tra cứu'
-                  : 'Tìm kiếm'}
-              </span>
+              <span className=''>Tìm kiếm</span>
             </span>
           </button>
-          {props.isVisibleBtnAdd && (
-            <button
-              className='btn btn-primary btn-sm m-btn m-btn--icon py-2 me-2'
-              type='button'
-              onClick={props.onClickThemMoi}
-            >
-              <span>
-                <i className='fas fa-plus'></i>
-                <span className=''>Thêm mới</span>
-              </span>
-            </button>
-          )}
+
+          <button
+            className='btn btn-primary btn-sm m-btn m-btn--icon py-2 me-2'
+            type='button'
+            onClick={props.handleDinhKem}
+          >
+            <span>
+              <i className='fas fa-paperclip'></i>
+              <span className=''>Đính kèm</span>
+            </span>
+          </button>
         </div>
       </div>
       <div>
@@ -168,7 +136,7 @@ const PageHearder = (props) => {
                     <Input placeholder='Từ khoá tìm kiếm' />
                   </FormItem>
                 </div> */}
-                {/* <div className='col-xl-6 col-lg-6'>
+                <div className='col-xl-6 col-lg-6'>
                   <FormItem label='Thủ tục hành chính' name='maThuTuc'>
                     <Select
                       // defaultValue='2.000379.000.00.00.H18'
@@ -199,43 +167,6 @@ const PageHearder = (props) => {
                         return (
                           <Option key={item.MATTHC} value={item.MATTHC}>
                             {item.TENTTHC}
-                          </Option>
-                        )
-                      })}
-                    </Select>
-                  </FormItem>
-                </div> */}
-                <div className='col-xl-6 col-lg-6'>
-                  <FormItem label='Lĩnh vực' name='maLinhVuc'>
-                    <Select
-                      // defaultValue='2.000379.000.00.00.H18'
-
-                      value={selectedOption.maLinhVuc}
-                      className='col-xl-12 col-lg-12 col-md-12'
-                      allowClear
-                      showSearch
-                      //   disabled={isDisableInput}
-                      placeholder='Lĩnh vực'
-                      filterOption={(input, option) =>
-                        option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0
-                      }
-                      onChange={(val, text) => {
-                        // formik.values.maLinhVuc = val
-                        // formik.values.tenLinhVuc = text?.children
-                        setSelectedOption({...selectedOption, maLinhVuc: val})
-                      }}
-                    >
-                      {dsLinhVuc.map((item) => {
-                        // if (item.MATTHC == formik.values.maLinhVuc && formik.values.maThuTuc) {
-                        //   return (
-                        //     <Option key={item.MATTHC} value={item.MATTHC} selected>
-                        //       {item.TENTTHC}
-                        //     </Option>
-                        //   )
-                        // }
-                        return (
-                          <Option key={item.MALINHVUC} value={item.MALINHVUC}>
-                            {item.TENLINHVUC}
                           </Option>
                         )
                       })}
@@ -338,13 +269,7 @@ const PageHearder = (props) => {
                   >
                     <span>
                       <i className='fas fa-search'></i>
-                      <span className=''>
-                        {props?.from == 'ThongKe'
-                          ? 'Thống kê'
-                          : props?.from == 'TraCuu'
-                          ? 'Tra cứu'
-                          : 'Tìm kiếm'}
-                      </span>
+                      <span className=''>Tìm kiếm</span>
                     </span>
                   </button>
                   <button

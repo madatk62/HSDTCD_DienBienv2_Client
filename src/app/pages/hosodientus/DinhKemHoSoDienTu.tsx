@@ -1,14 +1,14 @@
 import React from 'react';
-import TableHoSoDienTus1 from './components/TableHoSoDienTus1';
+import TableDinhKemHoSoDienTus from './components/TableDinhKemHoSoDienTus';
 import {shallowEqual, useSelector} from 'react-redux'
 import { RootState } from '../../../setup';
-const HoSoDienTus = (props:any) =>{
+const DinhKemHoSoDienTus = (props:any) =>{
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
-    const lstAction = ["btnView", "btnEdit", 'btnDel']
+    const lstAction = ["btnView", "btnAddFile"]
     const searchData = { iDCongDan: userInfor.technicalId ? userInfor.technicalId : null,}
     return(<div className='card card-xl-stretch mb-xl-9'>
-        <TableHoSoDienTus1 lstAction= {lstAction} isVisibleBtnAdd ={true} headerTitle = "Danh sách hồ sơ điện tử"/>
+        <TableDinhKemHoSoDienTus lstAction= {lstAction} headerTitle = "Đính kèm hồ sơ điện tử"/>
     </div>)
 }
 
-export default HoSoDienTus;
+export default DinhKemHoSoDienTus;

@@ -12,6 +12,9 @@ import GiayToHoSoDienTus from '../pages/giaytohosodientus/GiayToHoSoDienTu'
 import LoaiHoSoDienTus from '../pages/loaihosodientus/LoaiHoSoDienTu'
 
 import NhomHoSoDienTus from '../pages/nhomhosodientus/NhomHoSoDienTu'
+import ThongKeHoSoDienTus from '../pages/hosodientus/ThongKeHoSoDienTu'
+import TraCuuHoSoDienTus from '../pages/hosodientus/TraCuuHoSoDienTu'
+import DinhKemHoSoDienTus from '../pages/hosodientus/DinhKemHoSoDienTu'
 export function PrivateRoutes() {
 
   return (
@@ -31,6 +34,9 @@ export function PrivateRoutes() {
         <Route path='/loai-hsdt' component={LoaiHoSoDienTus} />
         <Route path='/nhom-hsdt' component={NhomHoSoDienTus} />
         <Route path='/ho-so-dien-tu' component={HoSoDienTu} />
+        <Route path='/thong-ke-hsdt' component={ThongKeHoSoDienTus} />
+        <Route path='/tra-cuu-hsdt' component={TraCuuHoSoDienTus} />
+        <Route path='/dinh-kem-hsdt' component={DinhKemHoSoDienTus} />
         <Route path='/giay-to-ho-so-dien-tu' component={GiayToHoSoDienTus} />
         <Redirect from='/auth' to='/categories' />
         <Redirect exact from='/' to='/categories' />

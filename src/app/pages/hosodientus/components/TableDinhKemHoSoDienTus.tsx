@@ -1,21 +1,36 @@
 import React, {useState,useEffect} from 'react'
-import {Popconfirm} from 'antd'
+import {Input, Popconfirm, Radio} from 'antd'
 import {shallowEqual, useSelector, connect, useDispatch, ConnectedProps} from 'react-redux'
-import * as moment from 'moment';
 
 import { TableList } from '../../../components'
 import {CONFIG} from '../../../../helpers/config';
 import { requestPOST_URL, requestDELETE_ASP } from '../../../../helpers/baseAPI';
 import ModalHoSoDienTuItem from './ModalHoSoDienTuItem';
-import PageHearder from './PageHeader';
+import ModalGiayToHoSoDienTuItem1 from '../../giaytohosodientus/components/ModalGiayToHoSoDienTuItem1';
+import PageDinhKemHSDTHearder from './PageDinhKemHSDTHeader';
 import { RootState } from '@setup/index';
 import { toast } from 'react-toastify';
-const TableHoSoDienTus1 = (props:any) => {
+const TableDinhKemHoSoDienTus = (props:any) => {
     const userInfor = useSelector<RootState>((auth) => auth.global.userInfo, shallowEqual) as any;
     const [modalAction, setModalAction] = useState("");
+    const [modalGiayToVisible, setModalGiayToVisible] = useState(false);
+    const [selectedRow, setSelectedRow] = useState({id:null});
     const [searchValue, setSearchValue] = useState(
         {iDCongDan: userInfor?.technicalId? userInfor?.technicalId: ""}
     );
+    // const handleSelectCol = (props:any)=>{
+    //     setSelectedRow
+        
+    // }
+    const handleDinhKem = ()=>{
+        if(selectedRow.id){
+
+            setModalGiayToVisible(true);
+        }else{
+            toast.warning("Hãy lựa chọn hồ sơ điện tử")
+        }
+        
+    }
     const getThaoTac = (record:any, lstAction: any = [])=>{
         return(
             <div>
@@ -76,6 +91,14 @@ const TableHoSoDienTus1 = (props:any) => {
         //     key: 'MaHoSo',
         // },
         {
+        title: ``,
+        data: null,
+        width: "30px",
+        render: (text:string,record:any) =>{
+            return <Input name="Checked" type='radio'  className ="ant-checkbox" onClick={()=>setSelectedRow(record)}></Input>;
+        }
+        },
+        {
             title: 'Tên hồ sơ',
             dataIndex: 'tenHoSo',
             key: 'TenHoSo'   
@@ -84,20 +107,6 @@ const TableHoSoDienTus1 = (props:any) => {
             title: 'Tên thủ tục',
             dataIndex: 'tenThuTuc',
             key: 'TenThuTuc'   
-        },
-        {
-            title: 'Ngày tạo',
-            dataIndex: '',
-            key: 'NgayTao',
-            render:(text:string,record:any) =>{
-                // const createdOn = record?.createdOn? moment(record?.createdOn, 'DD-MM-YYYY') : null
-                const createdOn =  moment.utc(new Date(record?.createdOn)).format("DD-MM-YYYY").toString()
-                return(
-                    <>
-                        {createdOn? createdOn : ""}
-                    </>
-                )
-            }   
         },
         {
             title: 'Thao tác',
@@ -154,25 +163,25 @@ const TableHoSoDienTus1 = (props:any) => {
       
     }
     return(<div>
-        <PageHearder title= {props.headerTitle?props.headerTitle: ""} 
-            onClickThemMoi={()=>{
-                setDetailItem({});
-                handleItem(null,"add")}}
-            setSearchValue = {setSearchValue}  
-            from = {props?.from} 
-            isVisibleBtnAdd = {props?.isVisibleBtnAdd} />
+        <PageDinhKemHSDTHearder title= {props.headerTitle?props.headerTitle: "" } 
+            handleDinhKem  = {handleDinhKem}
+            setSearchValue = {setSearchValue}    />
         <div className='card-body card-dashboard px-3 py-3'>
             <div className='card-dashboard-body table-responsive'>
+           
                 <TableList 
-                    dataTable = {dataTable}
-                    columns = {column}
-                    isPagination ={true}
-                />
+                        dataTable = {dataTable}
+                        columns = {column}
+                        isPagination ={true}
+                    />
+
+                
             </div>
         </div>
         
         {modalVisible && <ModalHoSoDienTuItem modalVisible= {modalVisible} setModalVisible= {setModalVisible} data={detailItem} reRenderTable = {getDataCategories} action={modalAction}/>}
+        {modalGiayToVisible && <ModalGiayToHoSoDienTuItem1 modalVisible= {modalGiayToVisible} setModalVisible= {setModalGiayToVisible} data={{hoSoDienTuID: selectedRow?.id ?selectedRow?.id: null }} reRenderTable = {()=>{}} action={"add"} searchData= {props.searchData}/>}
     </div>)
 }
 
-export default TableHoSoDienTus1;
+export default TableDinhKemHoSoDienTus;
